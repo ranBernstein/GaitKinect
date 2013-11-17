@@ -2,6 +2,8 @@ import numpy as np
 import sys
 from math import sqrt, acos
 from jointsMap import ancestorMap, Joints
+from periodAnalysisUtils import binaryByMean, binaryByMedian, deriveTimeSeries, smoothOutliers
+
 import matplotlib.pyplot as plt
 
 
@@ -26,6 +28,7 @@ def getAnccestorRelativePos(splited, isRelative, chosenIndices):
                 input.append(pos)
             continue
     return input
+
 #normalize vector between 0 to 1
 def normelizeVector(vec):
     if(len(vec)==0):
@@ -62,11 +65,12 @@ def length(v):
     return sqrt(dotproduct(v, v))
 
 def angle(v1, v2):
-    return acos(dotproduct(v1, v2) / (length(v1) * length(v2)))
+    inRad = acos(dotproduct(v1, v2) / (length(v1) * length(v2)))
+    return inRad*180
 
 def calcAngle(x1, y1, z1, x2, y2, z2, x3, y3, z3):
-    v1 = [x1-x2, y1-y2, z1-z2]
-    v2 = [x3-x2, y3-y2, z3-z2]
+    v1 = [x2-x3, y2-y3, z2-z3]
+    v2 = [x1-x2, y1-y2, z1-z2]
     return angle(v1,v2)
 
 def dis(x1, x2, y1, y2, z1, z2):
@@ -81,6 +85,10 @@ def prepareAnglesFromInput(filePath, i, outputIndex, check, allByTime, allByJoin
         splited = line.split() 
         timeStamp = int(splited[0])
         splited = np.array(splited)
+        output = float(splited[outputIndex])
+        if(output == 0):
+            continue
+        allByTime[timeStamp]['output'] = output
         try:
             x = float(splited[i])
             y = float(splited[i+1])
@@ -97,26 +105,55 @@ def prepareAnglesFromInput(filePath, i, outputIndex, check, allByTime, allByJoin
             grandFather_z = float(splited[grandFatherIndex_x+2])
             grandFather_tracked = int(splited[grandFatherIndex_x+3])
             if(check and (tracked != 2 or father_tracked != 2 or grandFather_tracked != 2)):
+            #if(check and (tracked == 0 or father_tracked == 0 or grandFather_tracked == 0)):
                 raise '0 value feature'                     
             angle = calcAngle(x, y, z, father_x,father_y,father_z, grandFather_x,grandFather_y,grandFather_z)
         except:
             #print "Unexpected error:", sys.exc_info()[0]
             continue
-        output = float(splited[outputIndex])
-        allByTime[timeStamp]['output'] = output
         allByTime[timeStamp][i] = angle
         allByJoint[i][timeStamp] = angle
-        time.append(int(splited[0]))
     f.close()
+    
     return allByTime, allByJoint
+
+def prepareAngularVelocityFromInput(filePath, i, outputIndex, check, allByTime, allByJoint):
+    allByTime, allByJoint = prepareAnglesFromInput(filePath, i, outputIndex, True, allByTime, allByJoint)
+    time = allByJoint[i].keys()
+    time.sort()
+    values = []
+    tmpTime = []
+    for t in time:
+        values.append(allByJoint[i][t])
+        tmpTime.append(t)
+    time = tmpTime
+    plt.plot(time,values)
+    values = binaryByMedian(values)
+    values = smoothOutliers(values)
+    plt.plot(time,values)
+    time, derived = deriveTimeSeries(time, values)
+    binaryDerived = binaryByMedian(derived)
+            
+    #plt.plot(time,binaryDerived)
+    plt.show()
+    return time, derived
 """   
-time, res = prepareAnglesFromInput('asc_gyro_l.skl', [63])
-plt.scatter(time,res)
-print len(res)
-plt.show()
+featureSpaceIndices = np.array([15, 19, 23, 27, 31, 35, 39, 43, 47, 51, 59, 63, 67, 75, 79, 83])
+fileName = 'inputs/asc_gyro_r.skl'
+allByTime = {}
+f = open(fileName, 'r')
+headers = f.readline().split()
+for line in f:
+    splited = line.split() 
+    timeStamp = int(splited[0])
+    allByTime[timeStamp] = {}
+f.close()
+allByJoint = {}
+
+for inputIndices in featureSpaceIndices:
+    allByJoint[inputIndices] = {} 
+time, res = prepareAngularVelocityFromInput(fileName, 63, 2, True, allByTime, allByJoint)
 """
-
-
 
 
 

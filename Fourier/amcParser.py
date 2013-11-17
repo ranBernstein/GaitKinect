@@ -4,6 +4,7 @@ from Fourier import getFourier
 from Cleaner import *
 from matplotlib.mlab import PCA
 from array import array
+from periodAnalysisUtils import binaryByMean, binaryByMedian, deriveTimeSeries
 import matplotlib.cm as cm
 
 samples = range(1,20)
@@ -93,7 +94,7 @@ def getMergedData(joints):
         input = np.concatenate((input, currSamples), axis=0)
     return input, tags
     
-"""
+
 joint = 'rtibia'
 fileName = '39/origin4.amc'
 file = 'AMCs/subjects/' + fileName
@@ -102,12 +103,19 @@ fig = plt.figure()
 plt.xlim(0, len(input))
 #ax = fig.add_subplot(111)
 i= np.random.random(10)
-plt.plot(range(len(input)), input)
+time = range(len(input))
+plt.plot(time, input)
+tmpInput = binaryByMedian(input)
+plt.plot(time, tmpInput)
+time, input = deriveTimeSeries(time, input)
+tmpInput = binaryByMean(input)
+input = tmpInput
+#plt.plot(time, input)
 plt.xlabel('Time (in frames)')
 plt.ylabel(joint + ' angle')
 fig.suptitle(fileName + ' - ' + joint, fontsize=14, fontweight='bold')
 plt.show()
-"""
+
 
 
 
