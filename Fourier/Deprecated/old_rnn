@@ -1,0 +1,11 @@
+"""
+    #training a clf for each joint
+    net = RecurrentNetwork()
+    net.addInputModule(LinearLayer(featureNum, name='in'))
+    net.addModule(SigmoidLayer((featureNum + 2)/2, name='hidden'))
+    net.addOutputModule(LinearLayer(1, name='out'))
+    net.addConnection(FullConnection(net['in'], net['hidden'], name='c1'))
+    net.addConnection(FullConnection(net['hidden'], net['out'], name='c2'))
+    net.addRecurrentConnection(FullConnection(net['hidden'], net['hidden'], name='c3'))
+    net.sortModules()
+    """
