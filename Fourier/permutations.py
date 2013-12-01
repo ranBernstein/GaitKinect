@@ -4,15 +4,18 @@ import itertools
 import random
 import copy
 import interpulation
+from operator import add
+import math
+
 
 def isEqual(a, b, gap=0):
     #return a==b
-    epsilon = np.abs(float(a+b)/1000.0)
+    epsilon = np.abs(float(a+b)/15.0)
     if(gap == 0):
         return np.abs(a-b) <=  epsilon
-    if(np.abs(gap) > 3*epsilon):
+    if(np.abs(gap) > np.abs(float(a+b)/10.0)):
         return False
-    return np.abs(a - b - gap) <=  epsilon
+    return np.abs(a - gap - b) <=  epsilon
 
 def compareHashed(t1, t2):
     try:
@@ -71,23 +74,31 @@ file = 'AMCs/subjects/' + str(subject) + '/origin1-2.amc'
 #file = 'AMCs/subjects/' + str(subject) + '/' + str(sample) + '.amc'
 joint = 'ltibia'
 input = getAMCperiod(joint, file)
-partsAmount = 18
+partsAmount = 9
 parts = []
 partsIndices = xrange(partsAmount)
 chunckSize = len(input)/partsAmount
 prefixes = {}
 sufixes = {}
-overlapFactor = 3
+overlapFactor = 1
 for i in partsIndices:
     start = max(0, i*chunckSize-random.randint(1, int(overlapFactor*chunckSize)))
     end = min((i+2)*chunckSize+random.randint(1, int(overlapFactor*chunckSize)), len(input))
     part = input[start:end]
-    #print 'start: ' + str(start) + ' end: ' + str(end)
+    #Adding noise
+    noise = np.random.normal(0,0.5,len(part))
+    part = map(add, noise, part)
     parts.append(part)
+    """
     for j in xrange(1,len(part)):
         prefixes[(i,j)] = myHash(tuple(part[:j]))
         sufixes[(i,j)] = myHash(tuple(part[len(part)-j:])) 
-    
+    """
+fig = plt.figure()
+for part in parts:
+    frameSize = math.ceil(np.sqrt(partsAmount))
+    curr = fig.add_subplot(frameSize*110 + parts.index(part)+1)
+    curr.plot(xrange(len(part)), part)
 def appendFrac(whole, originalNext):
     scaledNexts = interpulation.getScaledVectors(originalNext)
     longestOverlap = 0
