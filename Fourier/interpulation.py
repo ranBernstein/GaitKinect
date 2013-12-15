@@ -11,15 +11,22 @@ def scaleVec(input, scaleFactor):
     return f(scaled_x)
 
 def getScaledVectors(input):
-    scaleFactors = [ 0.8, 0.85, 0.9, 0.95, 1, 1.05, 1.1, 1.15, 1.2]
+    scaleFactors = [ 0.85, 0.9, 0.93, 0.95, 0.97, 0.985, 1, 1.015, 1.03]#, 1.06, 1.1, 1.15, 1.2]
     vectors = []
     for scaleFactor in scaleFactors:
         vectors.append(scaleVec(input, scaleFactor))
     return vectors
+
+def getUniformSampled(values, time, length=None):
+    f = interp1d(time, values, kind='cubic')
+    if length==None:
+        length  = len(values)
+    x = np.linspace(time[0], time[-1],  length)
+    return f(x), x
+    
 """
 x = xrange(50)
 y = np.sin(x)
-for vec in getScaledVectors(y):
-    plt.plot(xrange(len(vec)), vec)
+plt.plot(xrange(len(vec)), vec)
 plt.show()
 """

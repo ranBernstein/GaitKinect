@@ -1,4 +1,6 @@
 import numpy as np
+import LPF
+from scipy.interpolate import interp1d
 
 #align all cycles to the same phase
 def alignByMax(input):
@@ -57,6 +59,31 @@ def smoothOutliers(input):
             tmpInput.append(input[i])
     tmpInput.append(input[-1])
     return tmpInput
+
+def dropOutliers(input, time=None):
+    tmpInput = []
+    tmpTime = []
+    std = np.std(input)
+    if(time is None):
+        time = xrange(len(input))
+    clean, clean_time = LPF.clean(input, time)
+    f = interp1d(clean_time, clean, kind='cubic')
+    tmpTime.append(time[0])
+    tmpInput.append(input[0])
+    for i in xrange(1, len(input)):
+        if(np.abs(input[i] - f(time[i])) > 1*std):
+            pass
+        else:
+            tmpInput.append(input[i])
+            tmpTime.append(time[i])
+    return tmpInput, tmpTime
+
+
+
+
+
+
+
     
     
     

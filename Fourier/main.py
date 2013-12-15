@@ -103,7 +103,7 @@ def plotAMCCompare(coeffNum):
     plt.scatter(range(len(normalizedCoeffs)),normalizedCoeffs,color='red')
     
     plt.show()        
-file = 'assaf_45.skl'
+file = 'inputs/assaf_45.skl'
 joint = Joints.WristRight_Y
 coeffNum = 20
 periods= plotJointCenteredPeriodicaly(file, joint)

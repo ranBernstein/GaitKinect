@@ -137,7 +137,8 @@ def prepareAngularVelocityFromInput(filePath, i, outputIndex, check, allByTime, 
     #plt.plot(time,binaryDerived)
     plt.show()
     return time, derived
-"""   
+
+"""  
 featureSpaceIndices = np.array([15, 19, 23, 27, 31, 35, 39, 43, 47, 51, 59, 63, 67, 75, 79, 83])
 fileName = 'inputs/asc_gyro_r.skl'
 allByTime = {}
@@ -154,6 +155,7 @@ for inputIndices in featureSpaceIndices:
     allByJoint[inputIndices] = {} 
 time, res = prepareAngularVelocityFromInput(fileName, 63, 2, True, allByTime, allByJoint)
 """
+
 
 
 

@@ -16,10 +16,11 @@ def plotJointCentered(file, joint):
         relPos = absPos - centerPos;
         relJoints.append(relPos);
         time.append(int(splited[Joints.timestamp]))
+    plt.figure()
     plt.scatter(time, absJoints)
-    plt.show()
+    plt.figure()
     plt.scatter(time, relJoints)
-    plt.show() 
+     
 
 def plotJointCenteredPeriodicaly(file, joint):
     fourierValue = open(file, 'r')
@@ -34,18 +35,18 @@ def plotJointCenteredPeriodicaly(file, joint):
         splited = line.split()
         newTimeStamp = int(splited[Joints.timestamp])
         absPos = float(splited[joint])
-        centerPos = float(splited[joint%4])
+        centerPos = float(splited[ancestorMap[joint]]) #float(splited[joint%4])
         relPos = absPos - centerPos;
-        if(not firstIter and abs(lastRelPos - relPos) > 0.15):
-            continue
-        lastRelPos = relPos
+        #if(not firstIter and abs(lastRelPos - relPos) > 0.15):
+        #    continue
+        #lastRelPos = relPos
         if(len(periods) > 0):
             period = periods[-1];
         if newTimeStamp - lastTimeStamp > 100 :
             periods.append([]);
             period = periods[-1]; 
         lastTimeStamp = newTimeStamp
-        period.append(relPos);
+        period.append((newTimeStamp, relPos));
         firstIter = False
     longPeriods=[];
     for period in periods:

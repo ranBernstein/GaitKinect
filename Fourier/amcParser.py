@@ -4,8 +4,8 @@ from Fourier import getFourier
 from Cleaner import *
 from matplotlib.mlab import PCA
 from array import array
-from periodAnalysisUtils import binaryByMean, binaryByMedian, deriveTimeSeries
 import matplotlib.cm as cm
+import angleExtraction as ae
 
 samples = range(1,20)
 #samplesNum = len(samples)
@@ -15,10 +15,7 @@ numOfCoeffs = 9
 
 def getAMCperiod(joint, file, period=False, start=0, end=0):
     f=None
-    try:
-        f = open(file, 'r')
-    except IOError:
-        return []
+    f = open(file, 'r')
     input = []
     for line in f:
         if joint in line:
@@ -94,7 +91,7 @@ def getMergedData(joints):
         input = np.concatenate((input, currSamples), axis=0)
     return input, tags
     
-
+"""
 joint = 'rtibia'
 fileName = '39/origin4.amc'
 file = 'AMCs/subjects/' + fileName
@@ -115,7 +112,7 @@ plt.xlabel('Time (in frames)')
 plt.ylabel(joint + ' angle')
 fig.suptitle(fileName + ' - ' + joint, fontsize=14, fontweight='bold')
 plt.show()
-
+"""
 
 
 

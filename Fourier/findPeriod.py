@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import scipy.linalg as lin
 import re
 from amcParser import getAMCperiod
+"""
 f = open('ecg/chfdb_chf01_275.txt')
 noEmpty = []
 for l in f:
@@ -21,16 +22,20 @@ data=data[1,dK:]
 print("ecg:")
 print(data)
 print(pattern)
-
-noEmpty = getAMCperiod()
+"""
+file = 'AMCs/673.amc'
+joint = 'rradius'
+noEmpty = getAMCperiod(joint, file)
 data=np.array(noEmpty)
-dK=160
+dK=178
 pattern=data[:dK]
 #data=data[dK:]
-print("amc:")
-print(data)
-print(pattern)
-
+#print("amc:")
+#print(data)
+#print(pattern)
+plt.plot(xrange(len(pattern)), pattern)
+plt.plot(xrange(len(data)), data)
+plt.show()
 
 
 def create_mats(dat):
