@@ -1,0 +1,29 @@
+C:\Anaconda\lib\site-packages\matplotlib\pyplot.py:412: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_num_figures`).
+  max_open_warning, RuntimeWarning)
+/nm2:  0.01  m1:  0.01  score:  70.325
+/nm2:  0.5075  m1:  0.01  score:  67.175
+/nm2:  1.005  m1:  0.01  score:  71.025
+/nm2:  1.5025  m1:  0.01  score:  69.0
+/nm2:  2.0  m1:  0.01  score:  68.275
+/nm2:  0.01  m1:  0.5075  score:  68.125
+/nm2:  0.5075  m1:  0.5075  score:  70.225
+/nm2:  1.005  m1:  0.5075  score:  69.95
+/nm2:  1.5025  m1:  0.5075  score:  69.675
+/nm2:  2.0  m1:  0.5075  score:  68.875
+/nm2:  0.01  m1:  1.005  score:  70.1
+/nm2:  0.5075  m1:  1.005  score:  68.625
+/nm2:  1.005  m1:  1.005  score:  68.2
+/nm2:  1.5025  m1:  1.005  score:  70.925
+/nm2:  2.0  m1:  1.005  score:  71.2
+/nm2:  0.01  m1:  1.5025  score:  64.625
+/nm2:  0.5075  m1:  1.5025  score:  70.675
+/nm2:  1.005  m1:  1.5025  score:  72.125
+/nm2:  1.5025  m1:  1.5025  score:  68.375
+/nm2:  2.0  m1:  1.5025  score:  68.0
+/nm2:  0.01  m1:  2.0  score:  71.55
+/nm2:  0.5075  m1:  2.0  score:  73.85
+/nm2:  1.005  m1:  2.0  score:  69.825
+/nm2:  1.5025  m1:  2.0  score:  70.15
+/nm2:  2.0  m1:  2.0  score:  73.075
+scores:
+{}
