@@ -1,17 +1,21 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from Fourier import getFourier
 from Cleaner import *
 from matplotlib.mlab import PCA
 from array import array
 import matplotlib.cm as cm
 import angleExtraction as ae
 
+"""
 samples = range(1,20)
 #samplesNum = len(samples)
 subjects = [8, 16, 35, 39]
 #joint = 'rtibia'
 numOfCoeffs = 9
+"""
+def getAMCInput(joint, subject, index):
+    file = 'C:/Users/ran/git/Master/Fourier/AMCs/subjects/' + str(subject) + '/origin'+str(index)+ '.amc' 
+    return getAMCperiod(joint, file)
 
 def getAMCperiod(joint, file, period=False, start=0, end=0):
     f=None
@@ -67,9 +71,9 @@ def getFFT4subject(subject, joint, c):
         outputs = np.concatenate((outputs, tmp), axis=0)
     return outputs
     
-colors = cm.rainbow(np.linspace(0, 1, len(subjects)))
 
 def getMergedData(joints):
+    colors = cm.rainbow(np.linspace(0, 1, len(subjects)))
     input = None#np.empty((0, numOfCoeffs*2*len(joints)))
     tags =  np.empty(0)
     first = True

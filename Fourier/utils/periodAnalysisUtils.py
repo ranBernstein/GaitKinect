@@ -2,6 +2,13 @@ import numpy as np
 import LPF
 from scipy.interpolate import interp1d
 
+def alignByMaxMany(inputs):
+    ret = []
+    for input in inputs:
+        ret.append(alignByMax(input))
+    return ret
+    
+
 #align all cycles to the same phase
 def alignByMax(input):
     maxIndex = -1

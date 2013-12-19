@@ -2,4 +2,4 @@ eclipse.preferences.version=1
 encoding//gmmreg/__init__.py=utf-8
 encoding//gmmreg/_core.py=utf-8
 encoding//gmmreg/_plotting.py=utf-8
-encoding/FNN.py=utf-8
+encoding//playground/FNN.py=utf-8

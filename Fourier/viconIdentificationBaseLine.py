@@ -1,12 +1,12 @@
-from amcParser import getAMCperiod
-from periodAnalysisUtils import alignByMax
+from utils.amcParser import getAMCperiod
+from utils.periodAnalysisUtils import alignByMax
 import matplotlib.pyplot as plt
 import math
 import numpy as np
-import interpulation
+import utils.interpulation as inter
 from sklearn import datasets
 from sklearn.neighbors import KNeighborsClassifier
-import random
+from utils.crossValidate import crossValidate
 import copy
 import gc
 
@@ -31,47 +31,19 @@ for subject in subjects:
         sub =  fig.add_subplot(frameSize*110 + subjects.index(subject))
         sub.plot(range(len(input)), input)
         sub_uniform = fig_uniform.add_subplot(frameSize*110 + subjects.index(subject))
-        uniform_input, new_time = interpulation.getUniformSampled(input, xrange(len(input)), numOfFeatures)
+        uniform_input, new_time = inter.getUniformSampled(input, xrange(len(input)), numOfFeatures)
         sub_uniform.plot( xrange(numOfFeatures), uniform_input)
         data.append(uniform_input)
         tags.append(subject)
         plt.xlabel('Time (in frames)')
         plt.ylabel(joint + ' angle')
         plt.title('subject: ' + str(subject))
-hits=0.0
-counter = 0.0
-testFactors = np.linspace(0.03, 0.97, 20)
-scores = []
-clfs = []
+cl = KNeighborsClassifier()
+cl.n_neighbors = 5
+cl.weights = 'distance' 
 testSize = 35
-testAmount = 100
-for j in xrange(testAmount):
-    testIndices = random.sample(set(xrange(len(data))), testSize)
-    trainData = []
-    trainTags = []
-    dataTest = []
-    tagsTest = []
-    for i in xrange(len(data)):
-        if i in testIndices:
-            dataTest.append(data[i]) 
-            tagsTest.append(tags[i])
-        else:
-            trainData.append(data[i])
-            trainTags.append(tags[i])
-    from sklearn.neighbors import KNeighborsClassifier
-    knn = KNeighborsClassifier()
-    knn.n_neighbors = 5
-    knn.weights = 'distance' 
-    fit = knn.fit(trainData, trainTags)
-    res = knn.predict(dataTest)
-    gc.collect()
-    for i in xrange(testSize):
-        if(res[i] == tagsTest[i]):
-            hits+=1
-        counter+=1
-        i+=1
-score = hits/counter*100
-print score
+score = crossValidate(cl, data, tags, testSize)
+
 
 outFile = 'out.txt'
 out = open(outFile, 'r')

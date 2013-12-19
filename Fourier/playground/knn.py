@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn import datasets
 from sklearn.neighbors import KNeighborsClassifier
-from amcParser import getMergedData
+from utils.amcParser import getMergedData
 import time
 
 knn = KNeighborsClassifier()

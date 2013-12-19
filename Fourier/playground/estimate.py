@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn import datasets
-from amcParser import getMergedData
+from utils.amcParser import getMergedData
 import time
 from sklearn import tree
 from sklearn.neighbors import KNeighborsClassifier

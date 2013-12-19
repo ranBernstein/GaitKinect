@@ -23,6 +23,13 @@ def getUniformSampled(values, time, length=None):
         length  = len(values)
     x = np.linspace(time[0], time[-1],  length)
     return f(x), x
+
+def getUniformSampledVecs(vecs, length=None):
+    y_s = []
+    for vec in vecs:
+        y, x = getUniformSampled(vec, xrange(len(vec)), length)
+        y_s.append(y)
+    return y_s
     
 """
 x = xrange(50)

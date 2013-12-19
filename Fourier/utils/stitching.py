@@ -9,17 +9,20 @@ import math
 from scipy.interpolate import interp1d
 import LPF
 
-EPSILON_FACTOR = 0.2 
-MEAN_COEFF = 0.1
-STD_COEFF = 0.1
-noiseVariance = 6
+EPSILON_FACTOR = 0.1 
+GAP_FACTOR = 0.05
+MEAN_COEFF = 0.06
+STD_COEFF = 0.06
+MAXIMA_ORDER = 30
+CLUSTER_COEFF = 0.15
+OVERLAP_FACTOR = 0.05
 
-def isEqual(a, b, gap=0):
+def isEqual(a, b, gap=0,  epsilon_factor=EPSILON_FACTOR, gap_factor=GAP_FACTOR):
     #return a==b
-    epsilon = np.abs(float(a+b)*EPSILON_FACTOR)
+    epsilon = np.abs(float(a+b)*epsilon_factor)
     if(gap == 0):
         return np.abs(a-b) <=  epsilon
-    if(np.abs(gap) > np.abs(float(a+b)/10.0)):
+    if(np.abs(gap) > np.abs(float(a+b)*gap_factor)):
         return np.abs(a - b) <=  epsilon
     return np.abs(a - gap - b) <=  epsilon
 
@@ -72,46 +75,41 @@ def cost(vec):
     for i in xrange(len(vec)-1):
         sum+= (vec[i+1] - vec[i])**2
     return sum / float(len(vec)) 
-                
-t = np.linspace(0.0, 2*np.pi, num=100)
-subject = 2
-sample = 1
-file = 'AMCs/subjects/' + str(subject) + '/origin1-2.amc'  
-#file = 'AMCs/subjects/' + str(subject) + '/' + str(sample) + '.amc'
-joint = 'ltibia'
-input = getAMCperiod(joint, file)
-partsAmount = 9
 
-original_parts = []
-noisy_parts = []
-parts = []
-partsIndices = xrange(partsAmount)
-chunckSize = len(input)/partsAmount
-prefixes = {}
-sufixes = {}
-overlapFactor = 1
-for i in partsIndices:
-    start = max(0, i*chunckSize-random.randint(1, int(overlapFactor*chunckSize)))
-    end = min((i+2)*chunckSize+random.randint(1, int(overlapFactor*chunckSize)), len(input))
-    part = input[start:end]
-    original_parts.append(part)
-    #Adding noise
-    noise = np.random.normal(0,noiseVariance,len(part))
-    part = map(add, noise, part)
-    noisy_parts.append(part)
-    part, clean_time = LPF.clean(part)
-    parts.append(part)
+
+def createParts(input, noiseVariance = 6, partsAmount = 9):                
+    original_parts = []
+    noisy_parts = []
+    parts = []
+    partsIndices = xrange(partsAmount)
+    chunckSize = len(input)/partsAmount
+    prefixes = {}
+    sufixes = {}
+    overlapFactor = 1
+    for i in partsIndices:
+        start = max(0, i*chunckSize-random.randint(1, int(overlapFactor*chunckSize)))
+        end = min((i+2)*chunckSize+random.randint(1, int(overlapFactor*chunckSize)), len(input))
+        part = input[start:end]
+        original_parts.append(part)
+        #Adding noise
+        noise = np.random.normal(0,noiseVariance,len(part))
+        part = map(add, noise, part)
+        noisy_parts.append(part)
+        part, clean_time = LPF.clean(part)
+        parts.append(part)
+    return parts
 
 def plotParts(parts):
     fig = plt.figure()
     for part in parts:
-        frameSize = math.ceil(np.sqrt(partsAmount))
+        frameSize = math.ceil(np.sqrt(len(parts)))
         curr = fig.add_subplot(frameSize*110 + parts.index(part)+1)
         curr.plot(xrange(len(part)), part)
+"""
 plotParts(original_parts)
 plotParts(noisy_parts)
 plotParts(parts)
-
+"""
 def appendFrac(whole, originalNext, averagedWhole=None):
     if(averagedWhole is None):
         averagedWhole =  copy.copy(whole)
@@ -140,29 +138,29 @@ def appendFrac(whole, originalNext, averagedWhole=None):
         return whole + bestExtention.tolist(), averagedWhole + bestExtention.tolist()
     return whole, averagedWhole
 
-def checkMoments(vec1, vec2):
+def checkMoments(vec1, vec2,  m1=MEAN_COEFF, m2=STD_COEFF, epsilon=EPSILON_FACTOR, gap=GAP_FACTOR, overlap=OVERLAP_FACTOR):
     amplitude = np.max(vec1 + vec2) - np.min(vec1 + vec2)
     mean_diff = np.abs(np.mean(vec1) - np.mean(vec2))
     diffVec = map(sub, vec1, vec2)
     diff_std = np.std(diffVec)
-    if(mean_diff < MEAN_COEFF*amplitude and diff_std<STD_COEFF*amplitude):
+    if(mean_diff < m1*amplitude and diff_std<m2*amplitude):
         return True
     else:
         for i in xrange(len(vec1)):
-            if(not isEqual(vec1[i], vec2[i], mean_diff)):
+            if(not isEqual(vec1[i], vec2[i], mean_diff, epsilon, gap)):
                 return False
     return True
 
-def appendFracaveraged(whole, originalNext):
+def appendFracaveraged(whole, originalNext, m1=MEAN_COEFF, m2=STD_COEFF, epsilon=EPSILON_FACTOR, gap=GAP_FACTOR, overlap=OVERLAP_FACTOR):
     scaledNexts = interpulation.getScaledVectors(originalNext)
     longestOverlap = 0
     bestExtention = None
     bestOverlap = None
     for next in scaledNexts: 
-        for j in reversed(xrange(1,len(next))):
+        for j in reversed(xrange(int(len(next)*OVERLAP_FACTOR),len(next))):
             if(j > len(whole)-1):
                 continue
-            match = checkMoments(whole[-j:],next[:j])
+            match = checkMoments(whole[-j:],next[:j],  m1, m2, epsilon, gap, overlap)
             if(match and j>longestOverlap):
                 longestOverlap = j
                 bestExtention = next[j:]
@@ -174,16 +172,16 @@ def appendFracaveraged(whole, originalNext):
         return whole + bestExtention.tolist()
     return whole
 
-def prependFrac(whole, originalNext):
+def prependFrac(whole, originalNext,  m1=MEAN_COEFF, m2=STD_COEFF, epsilon=EPSILON_FACTOR, gap=GAP_FACTOR, overlap=OVERLAP_FACTOR):
     scaledNexts = interpulation.getScaledVectors(originalNext)
     longestOverlap = 0
     bestExtention = None
     bestOverlap = None
     for next in scaledNexts:
-        for j in reversed(xrange(1,len(next))):
+        for j in reversed(xrange(int(OVERLAP_FACTOR*len(next)),len(next))):
             if(j > len(whole)-1):
                 continue
-            match = checkMoments(whole[:j],next[:j])
+            match = checkMoments(whole[:j],next[:j],  m1, m2, epsilon, gap, overlap)
             if(match and j>longestOverlap):
                 longestOverlap = j
                 bestExtention = next[:-j]
@@ -195,43 +193,53 @@ def prependFrac(whole, originalNext):
         return whole + bestExtention.tolist() 
     return whole
 
-byOrder = copy.copy(parts[0])
-averaged = copy.copy(byOrder)
-for part in parts[1:]:
-    byOrder, averaged = appendFrac(byOrder, part, averaged)
+def stitchByOrder(parts):
+    byOrder = copy.copy(parts[0])
+    averaged = copy.copy(byOrder)
+    for part in parts[1:]:
+        byOrder, averaged = appendFrac(byOrder, part, averaged)
+    
+    cleaned, cleaned_time = LPF.clean(averaged) 
+    plt.figure()
+    plt.title('Stitching by order')
+    plt.plot(xrange(len(input)), input, color='blue', label='original, SM='+str(cost(input)))
+    plt.plot(xrange(len(byOrder)), byOrder, color='black', label='byOrder, SM='+str(cost(byOrder)))
+    plt.plot(xrange(len(averaged)), averaged, color='red', label='byOrder and averaged, SM='+str(cost(averaged)))
+    plt.plot(xrange(len(cleaned)), cleaned, color='green', label='byOrder and LPF and averaged, SM='+str(cost(cleaned)))
+    plt.legend().draggable()
 
-cleaned, cleaned_time = LPF.clean(averaged) 
-plt.figure()
-plt.title('Stitching by order')
-plt.plot(xrange(len(input)), input, color='blue', label='original, SM='+str(cost(input)))
-plt.plot(xrange(len(byOrder)), byOrder, color='black', label='byOrder, SM='+str(cost(byOrder)))
-plt.plot(xrange(len(averaged)), averaged, color='red', label='byOrder and averaged, SM='+str(cost(averaged)))
-plt.plot(xrange(len(cleaned)), cleaned, color='green', label='byOrder and LPF and averaged, SM='+str(cost(cleaned)))
-plt.legend().draggable()
+def stitch(parts, m1=MEAN_COEFF, m2=STD_COEFF, epsilon=EPSILON_FACTOR, gap=GAP_FACTOR, overlap=OVERLAP_FACTOR):
+    """
+    MEAN_COEFF=m1
+    STD_COEFF=m2
+    EPSILON_FACTOR=epsilon
+    OVERLAP_FACTOR=overlap
+    GAP_FACTOR=gap
+    """
+    #greedy
+    parts.sort()
+    parts.reverse()
+    greedy = copy.copy(parts[0])
+    averaged = copy.copy(greedy)
+    notUsed = []
+    for part in parts[1:]:
+        lenBefore = len(greedy)
+        #greedy, kuku = appendFrac(greedy, part, averaged)
+        averaged = appendFracaveraged(averaged, part,  m1, m2, epsilon, gap, overlap)
+        if(lenBefore == len(averaged)):
+            notUsed.append(part)   
+    counter = 0
+    for part in notUsed:
+        lenBefore = len(averaged)
+        averaged = prependFrac(averaged, part,  m1, m2, epsilon, gap, overlap)
+        if(len(averaged) != lenBefore):
+            counter+=1
+    clean, clean_time = LPF.clean(averaged)
+    return clean
 
-
-#greedy
-parts.sort()
-parts.reverse()
-greedy = copy.copy(parts[0])
-averaged = copy.copy(greedy)
-notUsed = []
-for part in parts[1:]:
-    lenBefore = len(greedy)
-    #greedy, kuku = appendFrac(greedy, part, averaged)
-    averaged = appendFracaveraged(averaged, part)
-    if(lenBefore == len(averaged)):
-        notUsed.append(part)   
-counter = 0
-for part in notUsed:
-    lenBefore = len(averaged)
-    averaged = prependFrac(averaged, part)
-    if(len(averaged) != lenBefore):
-        counter+=1
-print len(notUsed) -  counter
-
-
-
+"""
+subject = 2
+sample = 1
 plt.figure()
 plt.title('Greedy with second moment')
 #plt.plot(xrange(len(greedy)), greedy, color='black', label='greedy')
@@ -244,7 +252,7 @@ f.close()
 plt.plot(xrange(len(clean)), clean, color='green', label='greedy and averaged and clean')
 plt.legend().draggable()
 plt.show()
-  
+""" 
     
     
     
