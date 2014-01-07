@@ -63,12 +63,12 @@ def getFFT4subject(subject, joint, c):
             alignedInput.append(input[newIndex])
         input = alignedInput
         fft = np.fft.fft(input, numOfCoeffs)
-        tmp = np.empty((1, 2*numOfCoeffs), dtype=np.float)
+        localMax = np.empty((1, 2*numOfCoeffs), dtype=np.float)
         for i in range(numOfCoeffs):
-            tmp[0, 2*i] = fft[i].real
-            tmp[0, 2*i+1] = fft[i].imag
-        tmp[0, 0] = 0
-        outputs = np.concatenate((outputs, tmp), axis=0)
+            localMax[0, 2*i] = fft[i].real
+            localMax[0, 2*i+1] = fft[i].imag
+        localMax[0, 0] = 0
+        outputs = np.concatenate((outputs, localMax), axis=0)
     return outputs
     
 

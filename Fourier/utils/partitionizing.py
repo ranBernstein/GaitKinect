@@ -1,10 +1,5 @@
 import numpy as np
-import numpy.random as rnd
-import matplotlib.pyplot as plt 
-import scipy.linalg as lin
-import re
 from scipy.signal import argrelextrema
-from amcParser import getAMCperiod
 from cluster import HierarchicalClustering
 from stitching import MAXIMA_ORDER, CLUSTER_COEFF, plotParts
 """
@@ -21,20 +16,19 @@ def breakToPeriods(arg, file=False):
     else:
         list = arg
     a = np.array(list)
-    #plt.plot(list)
-    tmp = argrelextrema(a, np.greater, 0, MAXIMA_ORDER)
-    #plt.scatter(tmp, a.take(tmp))
-    #print tmp
-    #print a.take(tmp)[0]
-    amplitude = np.max(a) - np.min(a)
-    cl = HierarchicalClustering(a.take(tmp)[0].tolist(), lambda x,y: abs(x-y))
+    localMax = argrelextrema(a, np.greater, 0, MAXIMA_ORDER)
+    try:
+        amplitude = np.max(a) - np.min(a)
+    except:
+        pass
+    cl = HierarchicalClustering(a.take(localMax)[0].tolist(), lambda x,y: abs(x-y))
     clusters = cl.getlevel(int(amplitude*CLUSTER_COEFF))
     if(len(clusters) == 0):
         return []
     #print clusters
     max = 0
     longestSeq = None
-    if(len(clusters) == len(tmp)):
+    if(len(clusters) == len(localMax)):
         longestSeq = clusters
     else:
         for cluster in clusters:
@@ -58,13 +52,8 @@ def breakToPeriods(arg, file=False):
             period = list[open:close]
             periods.append(period)
         else:
-            #print strideLen, averageLength
             pass
         open = close
-        #plt.plot(period)
-    #periods = periods[1:]
-    plotParts(periods)
-    #plt.show()
     return periods
 """
 #f = open('../outputs/stitching/greedy_with_noise/stitched.txt', 'r')

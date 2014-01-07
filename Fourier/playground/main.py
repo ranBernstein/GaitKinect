@@ -70,8 +70,8 @@ def perJointAnalysis(file, joint):
     coeffs_y = accumlateCoeffsCompare(file, joint, periods_y, False)
     coeffs_z = accumlateCoeffsCompare(file, joint, periods_z, False)
     for i in range(coeffNum):
-        tmp = (coeffs_x[i]**2 + coeffs_y[i]**2 + coeffs_z[i]**2)**0.5
-        sumCoeffs.append(tmp)
+        localMax = (coeffs_x[i]**2 + coeffs_y[i]**2 + coeffs_z[i]**2)**0.5
+        sumCoeffs.append(localMax)
     plt.scatter(range(len(sumCoeffs)), sumCoeffs)
     plt.show()
 

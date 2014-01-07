@@ -8,14 +8,15 @@ from operator import add, sub
 import math
 from scipy.interpolate import interp1d
 import LPF
-
-EPSILON_FACTOR = 0.1 
-GAP_FACTOR = 0.05
-MEAN_COEFF = 0.06
-STD_COEFF = 0.06
-MAXIMA_ORDER = 30
+from utils.amcParser import getAMCInput
+import utils.lcss as lcs 
+EPSILON_FACTOR = 0.15 
+GAP_FACTOR = 0.15
+MEAN_COEFF = 0.13
+STD_COEFF = 0.09
+MAXIMA_ORDER = 7
 CLUSTER_COEFF = 0.15
-OVERLAP_FACTOR = 0.05
+OVERLAP_FACTOR = 0.1
 
 def isEqual(a, b, gap=0,  epsilon_factor=EPSILON_FACTOR, gap_factor=GAP_FACTOR):
     #return a==b
@@ -77,7 +78,7 @@ def cost(vec):
     return sum / float(len(vec)) 
 
 
-def createParts(input, noiseVariance = 6, partsAmount = 9):                
+def createParts(input, plotNoise=False,  partsAmount = 9, noiseVariance = 6):                
     original_parts = []
     noisy_parts = []
     parts = []
@@ -95,16 +96,21 @@ def createParts(input, noiseVariance = 6, partsAmount = 9):
         noise = np.random.normal(0,noiseVariance,len(part))
         part = map(add, noise, part)
         noisy_parts.append(part)
-        part, clean_time = LPF.clean(part)
+        part = LPF.clean(part)
         parts.append(part)
+    if(plotNoise):
+        plotParts(noisy_parts)
     return parts
 
-def plotParts(parts):
+def plotParts(parts, xlabel = ' ', ylabel = ' ', titles = [' ']*100):
     fig = plt.figure()
-    for part in parts:
+    for i, part in enumerate(parts):
         frameSize = math.ceil(np.sqrt(len(parts)))
         curr = fig.add_subplot(frameSize*110 + parts.index(part)+1)
-        curr.plot(xrange(len(part)), part)
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.title(titles[i])
+        curr.plot(part)
 """
 plotParts(original_parts)
 plotParts(noisy_parts)
@@ -219,11 +225,10 @@ def stitch(parts, m1=MEAN_COEFF, m2=STD_COEFF, epsilon=EPSILON_FACTOR, gap=GAP_F
     #greedy
     parts.sort()
     parts.reverse()
-    greedy = copy.copy(parts[0])
-    averaged = copy.copy(greedy)
+    averaged = copy.copy(parts[0])
     notUsed = []
     for part in parts[1:]:
-        lenBefore = len(greedy)
+        lenBefore = len(averaged)
         #greedy, kuku = appendFrac(greedy, part, averaged)
         averaged = appendFracaveraged(averaged, part,  m1, m2, epsilon, gap, overlap)
         if(lenBefore == len(averaged)):
@@ -234,21 +239,37 @@ def stitch(parts, m1=MEAN_COEFF, m2=STD_COEFF, epsilon=EPSILON_FACTOR, gap=GAP_F
         averaged = prependFrac(averaged, part,  m1, m2, epsilon, gap, overlap)
         if(len(averaged) != lenBefore):
             counter+=1
+            notUsed.remove(part)
+    """
+    for part in notUsed:
+        a = np.sum(averaged)
+        lcs.lcs(averaged, part, isEqual)
+        #if(a!=np.sum(averaged)):
+         #   print 'kuku'
+    """
     clean, clean_time = LPF.clean(averaged)
+    plt.figure()
+    plt.plot(clean)
     return clean
 
 """
-subject = 2
-sample = 1
+subject = 8
+joint = 'rtibia'
+index =0
+partsAmount =9
+input = getAMCInput(joint, subject, index)
+parts = createParts(input, partsAmount)
+plotParts(parts)
+stitched = stitch(parts)
 plt.figure()
 plt.title('Greedy with second moment')
 #plt.plot(xrange(len(greedy)), greedy, color='black', label='greedy')
-plt.plot(xrange(len(averaged)), averaged, color='red', label='greedy and averaged')
-clean, clean_time = LPF.clean(averaged)
-f = open('outputs/stitching/greedy_with_noise/stitched.txt', 'w')
-f.flush()
+plt.plot(xrange(len(stitched)), stitched, color='red', label='greedy and averaged')
+clean, clean_time = LPF.clean(stitched)
+#f = open('outputs/stitching/greedy_with_noise/stitched.txt', 'w')
+#f.flush()
 #f.writelines([str(x)+'\n' for x in clean])
-f.close()
+#f.close()
 plt.plot(xrange(len(clean)), clean, color='green', label='greedy and averaged and clean')
 plt.legend().draggable()
 plt.show()

@@ -11,7 +11,7 @@ def scaleVec(input, scaleFactor):
     return f(scaled_x)
 
 def getScaledVectors(input):
-    scaleFactors = [ 0.85, 0.9, 0.93, 0.95, 0.97, 0.985, 1, 1.015, 1.03]#, 1.06, 1.1, 1.15, 1.2]
+    scaleFactors = [1]#[ 0.85, 0.9, 0.93, 0.95, 0.97, 0.985, 1, 1.015, 1.03]#, 1.06, 1.1, 1.15, 1.2]
     vectors = []
     for scaleFactor in scaleFactors:
         vectors.append(scaleVec(input, scaleFactor))

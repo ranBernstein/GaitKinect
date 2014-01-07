@@ -1,4 +1,4 @@
-from utils.amcParser import *
+from utils.amcParser import getAMCInput
 from utils.periodAnalysisUtils import alignByMax
 import matplotlib.pyplot as plt
 import math
@@ -14,6 +14,7 @@ import utils.periodAnalysisUtils as ut
 from utils.crossValidate import crossValidate
 from multiprocessing import Pool
 from utils.stitching import EPSILON_FACTOR, GAP_FACTOR, MEAN_COEFF,OVERLAP_FACTOR,STD_COEFF
+from sklearn import svm
 
 numOfFeatures = 100
 subjects = [8, 16, 35 ,39]
@@ -21,7 +22,7 @@ joint = 'rtibia'
 index =0
 partsAmount=9
 testAmount = 50
-stitchesNum = 15
+stitchesNum = 40
 scores = {}
 
 def evalParams(m1=MEAN_COEFF, m2=STD_COEFF,  epsilon=EPSILON_FACTOR,gap=GAP_FACTOR, overlap=OVERLAP_FACTOR):       
@@ -60,17 +61,18 @@ def evalParams(m1=MEAN_COEFF, m2=STD_COEFF,  epsilon=EPSILON_FACTOR,gap=GAP_FACT
 
 if __name__ == '__main__':  
     results = {}  
-    scale = np.linspace(0.005, 0.4, 6) 
-    m1=0.01
-    m2=0.01
-    epsilon = 0.1
+    scale = np.linspace(0.01, 0.12, 3) 
+    m1=0.13
+    m2=0.09
+    epsilon = 0.15
+    gap = 0.15
+    overlap = 0.1
     p = Pool(3)
     for measured in scale:
-        #for m2 in momentss:
-        #results[measured] = evalParams(m1, m2, epsilon, measured)
-        results[measured] = p.apply_async(evalParams, [m1, m2, epsilon, measured]) 
+        results[measured] = p.apply_async(evalParams, [m1, m2,epsilon, gap, overlap]) 
     p.close()
     p.join()
+    print 'ovelap'
     for measured in scale:
         res = results[measured].get()
         print '/n', measured, res

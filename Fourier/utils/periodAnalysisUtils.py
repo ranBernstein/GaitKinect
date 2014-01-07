@@ -1,5 +1,6 @@
 import numpy as np
 import LPF
+import stitchingLoop as sl
 from scipy.interpolate import interp1d
 
 def alignByMaxMany(inputs):
@@ -26,6 +27,30 @@ def alignByMax(input):
         alignedInput.append(input[newIndex])
     return alignedInput
 
+def alignBySmall(vec1, vec2, compareFunc=sl.euclidean):
+    big, small = (vec1, vec2) if len(vec1) > len(vec2) else (vec2, vec1)
+    bestGrade = 0
+    bestVec = None
+    for shift in xrange(len(big)):
+        newBig = big[-shift:] + big[:-shift]
+        grade = compareFunc(small, newBig[:len(small)])
+        if(grade > bestGrade):
+            bestGrade = grade
+            bestVec = newBig
+    return (bestVec, vec2) if len(vec1) > len(vec2) else (vec1, bestVec)
+
+def alignByBig(vec1, vec2, compareFunc=sl.euclidean):
+    big, small = (vec1, vec2) if len(vec1) > len(vec2) else (vec2, vec1)
+    bestGrade = 0
+    bestOffset = None
+    for offset in xrange(len(big) - len(small)):
+        overLap = big[offset:(offset+len(small))]
+        grade = compareFunc(small, overLap)
+        if(grade > bestGrade):
+            bestGrade = grade
+            bestOffset = offset
+    return (bestOffset, 0) if len(vec1) < len(vec2) else (0, bestOffset)
+        
 def deriveTimeSeries(time, values):
     derived = []
     derivedTime = []

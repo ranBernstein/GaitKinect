@@ -8,7 +8,6 @@ from sklearn import datasets
 from sklearn.neighbors import KNeighborsClassifier
 from utils.crossValidate import crossValidate
 import copy
-import gc
 
 numOfFeatures = 100
 subjects = [8, 16, 35 ,39]
