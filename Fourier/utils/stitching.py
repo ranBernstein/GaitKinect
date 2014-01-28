@@ -78,12 +78,14 @@ def cost(vec):
     return sum / float(len(vec)) 
 
 
-def createParts(input, plotNoise=False,  partsAmount = 9, noiseVariance = 6):                
+def createParts(input, plotNoise=False,  partsAmount = 9, noiseVariance = 6, cleanFunc=LPF.clean):                
     original_parts = []
     noisy_parts = []
     parts = []
     partsIndices = xrange(partsAmount)
     chunckSize = len(input)/partsAmount
+    if(chunckSize < 2):
+        raise 'input too short'
     prefixes = {}
     sufixes = {}
     overlapFactor = 1
@@ -96,26 +98,22 @@ def createParts(input, plotNoise=False,  partsAmount = 9, noiseVariance = 6):
         noise = np.random.normal(0,noiseVariance,len(part))
         part = map(add, noise, part)
         noisy_parts.append(part)
-        part = LPF.clean(part)
-        parts.append(part)
+        #part = cleanFunc(part)
+        #parts.append(part)
     if(plotNoise):
         plotParts(noisy_parts)
-    return parts
+    return noisy_parts
 
 def plotParts(parts, xlabel = ' ', ylabel = ' ', titles = [' ']*100):
     fig = plt.figure()
     for i, part in enumerate(parts):
         frameSize = math.ceil(np.sqrt(len(parts)))
-        curr = fig.add_subplot(frameSize*110 + parts.index(part)+1)
+        curr = fig.add_subplot(frameSize,frameSize,parts.index(part)+1)
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.title(titles[i])
         curr.plot(part)
-"""
-plotParts(original_parts)
-plotParts(noisy_parts)
-plotParts(parts)
-"""
+
 def appendFrac(whole, originalNext, averagedWhole=None):
     if(averagedWhole is None):
         averagedWhole =  copy.copy(whole)

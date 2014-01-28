@@ -40,7 +40,10 @@ def alignBySmall(vec1, vec2, compareFunc=sl.euclidean):
     return (bestVec, vec2) if len(vec1) > len(vec2) else (vec1, bestVec)
 
 def alignByBig(vec1, vec2, compareFunc=sl.euclidean):
-    big, small = (vec1, vec2) if len(vec1) > len(vec2) else (vec2, vec1)
+    try:
+        big, small = (vec1, vec2) if len(vec1) > len(vec2) else (vec2, vec1)
+    except Exception, e:
+        pass
     bestGrade = 0
     bestOffset = None
     for offset in xrange(len(big) - len(small)):

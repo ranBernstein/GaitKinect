@@ -6,13 +6,7 @@ from array import array
 import matplotlib.cm as cm
 import angleExtraction as ae
 
-"""
-samples = range(1,20)
-#samplesNum = len(samples)
-subjects = [8, 16, 35, 39]
-#joint = 'rtibia'
-numOfCoeffs = 9
-"""
+
 def getAMCInput(joint, subject, index):
     file = 'C:/Users/ran/git/Master/Fourier/AMCs/subjects/' + str(subject) + '/origin'+str(index)+ '.amc' 
     return getAMCperiod(joint, file)
@@ -28,6 +22,8 @@ def getAMCperiod(joint, file, period=False, start=0, end=0):
         input = input[start:end]  # getPeriod
     return input
 
+
+"""
 def getLengthVector(subject):
     outputs = np.empty((0, 1), dtype=np.float)
     for sample in samples:
@@ -95,7 +91,7 @@ def getMergedData(joints):
         input = np.concatenate((input, currSamples), axis=0)
     return input, tags
     
-"""
+
 joint = 'rtibia'
 fileName = '39/origin4.amc'
 file = 'AMCs/subjects/' + fileName

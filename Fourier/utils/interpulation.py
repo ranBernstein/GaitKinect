@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import angleExtraction
 from scipy.interpolate import interp1d
 import scipy 
 
@@ -17,17 +16,19 @@ def getScaledVectors(input):
         vectors.append(scaleVec(input, scaleFactor))
     return vectors
 
-def getUniformSampled(values, time, length=None):
-    f = interp1d(time, values, kind='cubic')
+def getUniformSampled(time, values, length=None):
+    f = interp1d(time, values, kind='linear')
     if length==None:
         length  = len(values)
     x = np.linspace(time[0], time[-1],  length)
-    return f(x), x
+    retval = x, f(x)
+    #except Exception, e:
+    return retval
 
 def getUniformSampledVecs(vecs, length=None):
     y_s = []
     for vec in vecs:
-        y, x = getUniformSampled(vec, xrange(len(vec)), length)
+        x, y= getUniformSampled(xrange(len(vec)), vec, length)
         y_s.append(y)
     return y_s
     

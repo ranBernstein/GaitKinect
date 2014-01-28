@@ -9,7 +9,6 @@ def clean(y_p, N=10, time=None):
     clean_time = None
     if(time is not None):
         y, clean_time = interpulation.getUniformSampled(y, time)
-    Fc=40
     Fs=1600
     # provide them to firwin
     h=sig.firwin( numtaps=N, cutoff=40, nyq=Fs/2)

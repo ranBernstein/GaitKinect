@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from jointsMap import *
 
 
-def plotJointCentered(file, joint):
+def plotJointCentered(file, joint, plot=False):
     f = open(file, 'r')
     headers = f.readline()
     time = []
@@ -16,10 +16,12 @@ def plotJointCentered(file, joint):
         relPos = absPos - centerPos;
         relJoints.append(relPos);
         time.append(int(splited[Joints.timestamp]))
-    plt.figure()
-    plt.scatter(time, absJoints)
-    plt.figure()
-    plt.scatter(time, relJoints)
+    if(plot):
+        plt.figure()
+        plt.scatter(time, absJoints)
+        plt.figure()
+        plt.scatter(time, relJoints)
+    return time, relJoints
      
 
 def plotJointCenteredPeriodicaly(file, joint):

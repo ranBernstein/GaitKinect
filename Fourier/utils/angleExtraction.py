@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 from math import sqrt, acos
-from jointsMap import ancestorMap, Joints
+from jointsMap import ancestorMap
 from periodAnalysisUtils import binaryByMean, binaryByMedian, deriveTimeSeries, smoothOutliers
 
 import matplotlib.pyplot as plt
@@ -66,15 +66,68 @@ def length(v):
 
 def angle(v1, v2):
     inRad = acos(dotproduct(v1, v2) / (length(v1) * length(v2)))
-    return inRad*180
+    return inRad*180.0/np.pi
 
+def createVectors(x1, y1, z1, x2, y2, z2, x3, y3, z3):
+    return [x2-x3, y2-y3, z2-z3], [x1-x2, y1-y2, z1-z2]
 def calcAngle(x1, y1, z1, x2, y2, z2, x3, y3, z3):
-    v1 = [x2-x3, y2-y3, z2-z3]
-    v2 = [x1-x2, y1-y2, z1-z2]
+    v1, v2 = createVectors(x1, y1, z1, x2, y2, z2, x3, y3, z3)
     return angle(v1,v2)
 
 def dis(x1, x2, y1, y2, z1, z2):
     return sqrt((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)
+
+def getAngleFromSplited(headers, splited, jointStr, checkConfedence=True):
+    jointCol = headers.index(jointStr)
+    x = float(splited[jointCol])
+    y = float(splited[jointCol+1])
+    z = float(splited[jointCol+2])
+    tracked = int(splited[jointCol+3])
+    fatherStr = ancestorMap[jointStr]
+    fatherIndex_x = headers.index(fatherStr)
+    father_x = float(splited[fatherIndex_x])
+    father_y = float(splited[fatherIndex_x+1])
+    father_z = float(splited[fatherIndex_x+2])
+    father_tracked = int(splited[fatherIndex_x+3])
+    grandFatherIndex_x =  headers.index(ancestorMap[fatherStr])
+    grandFather_x = float(splited[grandFatherIndex_x])
+    grandFather_y = float(splited[grandFatherIndex_x+1])
+    grandFather_z = float(splited[grandFatherIndex_x+2])
+    grandFather_tracked = int(splited[grandFatherIndex_x+3])
+    if(checkConfedence and (tracked != 2 or father_tracked != 2 or grandFather_tracked != 2)):
+        return None
+    v1, v2 = createVectors(x, y, z, father_x,father_y,father_z, grandFather_x,grandFather_y,grandFather_z)
+    if(length(v1) == 0 or length(v2) == 0):
+        return None
+    a = angle(v1, v2)
+    weight = tracked + father_tracked + grandFather_tracked
+    retVal = a if checkConfedence else (a, weight)
+    return retVal
+
+def getAngleVec(filePath, jointStr, checkConfedence=True):
+    f = open(filePath, 'r')
+    headers = f.readline().split()
+    angles = []
+    time = []
+    weights = []
+    for line in f:
+        splited = line.split() 
+        timeStamp = int(splited[0])
+        splited = np.array(splited)
+        retVal = getAngleFromSplited(headers, splited, jointStr, checkConfedence)
+        if(retVal is None):
+            continue
+        weight = None
+        if(checkConfedence):
+            angle = retVal
+        else:
+            angle, weight = retVal
+        time.append(timeStamp)
+        angles.append(angle)
+        if(weight is not None):
+            weights.append(weight)
+    retVal = (time, angles) if checkConfedence else (time, angles, weights)
+    return retVal
 
 def prepareAnglesFromInput(filePath, i, outputIndex, check, allByTime, allByJoint):
     f = open(filePath, 'r')
@@ -109,7 +162,6 @@ def prepareAnglesFromInput(filePath, i, outputIndex, check, allByTime, allByJoin
                 raise '0 value feature'                     
             angle = calcAngle(x, y, z, father_x,father_y,father_z, grandFather_x,grandFather_y,grandFather_z)
         except:
-            #print "Unexpected error:", sys.exc_info()[0]
             continue
         allByTime[timeStamp][i] = angle
         allByJoint[i][timeStamp] = angle

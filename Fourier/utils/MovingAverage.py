@@ -1,15 +1,13 @@
 import numpy as np
-from utils.stitching import MAXIMA_ORDER, CLUSTER_COEFF, plotParts, createParts
-import utils.stitchingLoop as loop 
-import utils.periodAnalysisUtils as ut
-from operator import add, sub
-import utils.LPF as LPF 
-import numpy.random as rnd
-import matplotlib.pyplot as plt 
-from utils.amcParser import getAMCperiod
 
-
+def partsmovingAverage(parts, window_size=16, factor=1.3):
+    cleanParts = []
+    for part in parts:
+        clean = movingAverage(part, window_size, factor)
+        cleanParts.append(clean)
+    return cleanParts
 def movingAverage(interval, window_size=16, factor=1.3):
+    interval = interval if type(interval) is list else interval.tolist()
     if(window_size %2 == 0):
         window_size += 1
     
@@ -21,8 +19,8 @@ def movingAverage(interval, window_size=16, factor=1.3):
         window[half - i] = window[half - i + 1]/float(factor) 
     s = np.sum(window)
     window = [x/s for x in window]
-    head = [interval[0]]*window_size
-    tail = [interval[-1]]*window_size
+    head = [np.mean(interval[:window_size])]*window_size
+    tail = [np.mean(interval[-window_size:])]*window_size
     conv = np.convolve(head + interval + tail, window, 'same')
     return conv[window_size:-window_size]
 
