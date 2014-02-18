@@ -31,7 +31,7 @@ def euclidean(vec1, vec2, lenFac):
     return 1 if m==0 else (m/(m+0.01) + lenFac*float(len(vec1))/(len(vec1)+1))/(1+lenFac) 
 
 def slidingOver(vec1, vec1Des, vec2, vec2Des, overLapGrader, minimalOverlap, maximalOverlap, \
-                averageGrade, lenFac):
+                averageGrade, lenFac, density, parts):
     big, small = (vec1, vec2) if len(vec1) > len(vec2) else (vec2, vec1)
     bigDes, smallDes = (vec1Des, vec2Des) if len(vec1) > len(vec2) else (vec2Des, vec1Des)
     bestGrade = -1
@@ -42,7 +42,8 @@ def slidingOver(vec1, vec1Des, vec2, vec2Des, overLapGrader, minimalOverlap, max
     #i iterates over the overlap size when the prefix of the merged vector is from small
     for i in reversed(xrange(minimalOverlap, maximalOverlap)):
         grade =  overLapGrader(big[:i], small[-i:], lenFac)
-        if(grade > bestGrade):
+        if(grade > bestGrade and 
+           checkDensity(density, bigDes, 0, smallDes,  len(small) - i, parts)):
             bestGrade = grade
             bigStart = 0
             smallStart = len(small) - i
@@ -52,7 +53,8 @@ def slidingOver(vec1, vec1Des, vec2, vec2Des, overLapGrader, minimalOverlap, max
     for i in xrange(startingIndexInBig, len(big)-minimalOverlap):
         overlapSize = min(len(small), len(big) - i)
         grade =  overLapGrader(small[:overlapSize], big[i:i+overlapSize], lenFac)
-        if(grade > bestGrade):
+        if(grade > bestGrade and 
+           checkDensity(density, bigDes, i, smallDes,  0, parts)):
             bestGrade = grade
             bigStart = i
             smallStart = 0
@@ -66,6 +68,23 @@ def slidingOver(vec1, vec1Des, vec2, vec2Des, overLapGrader, minimalOverlap, max
     mergedVec= mergeByIndices(big, bigStart, small, smallStart, bestOverlap)
     mergedDes = unionSegmentDescriptor(bigDes, bigStart, smallDes, smallStart)
     return mergedVec, bestGrade, mergedDes 
+
+def checkDensity(density, bigDes, bigStart, smallDes, smallStart, parts):
+    if density is None:
+        return True
+    mergedDes = unionSegmentDescriptor(bigDes, bigStart, smallDes, smallStart)
+    return isDescriptorLegal(parts, mergedDes, density)
+
+def isDescriptorLegal(parts, mergedDes, density):
+    layers = {}
+    for partNum, partDes in mergedDes.items():
+        pos = partDes[0]
+        length = len(parts[partNum])
+        for i in xrange(pos, pos + length):
+            layers[i] = layers.get(i, 0) + 1
+            if(layers[i] > density):
+                return False
+    return True
 
 def mergeByIndices(big, bigStart, small, smallStart, bestOverlap):
     def toList(vec):
@@ -87,9 +106,9 @@ def unionSegmentDescriptor(des1, off1, des2, off2):
         des[segNum] = (pos + off1, order + maxOrder +1)
     return des
 
-def stitch(parts, startGrade=0.9, minimalOverlap=5, maximalOverlap=None, lenFac=0.2, matchFrame=slidingOver, \
-           overLapGrader=euclidean):
-    parts = copy.copy(parts)
+def stitch(parts_p, startGrade=0.9, minimalOverlap=5, maximalOverlap=None, lenFac=0.2, density=None, 
+           matchFrame=slidingOver, overLapGrader=euclidean):
+    parts = copy.copy(parts_p)
     #initialize parts descriptors
     partDescriptors = []
     for i in xrange(len(parts)):
@@ -103,11 +122,9 @@ def stitch(parts, startGrade=0.9, minimalOverlap=5, maximalOverlap=None, lenFac=
                 break
             for j in xrange(i):
                 average = startGrade if len(grades) == 0 else  np.mean(grades)
-                #try:
                 stitched, grade, mergedDes = matchFrame(parts[i], partDescriptors[i], parts[j], \
-                        partDescriptors[j], overLapGrader, minimalOverlap, maximalOverlap, average, lenFac)
-                #except Exception, e:
-                #pass
+                   partDescriptors[j], overLapGrader, minimalOverlap, maximalOverlap, average, lenFac, \
+                   density, parts_p)
                 if(len(stitched) == 0):
                     continue
                 grades.append(grade)
@@ -126,6 +143,10 @@ def stitch(parts, startGrade=0.9, minimalOverlap=5, maximalOverlap=None, lenFac=
 
 def plotDesBypart(originalParts, cleanedParts, mergedDes):
     des = mergedDes[-1]
+    plotDes(cleanedParts, des)
+    plotDes(originalParts, des)
+
+def plotDes(parts, des): 
     sortingIndices = sorted(des.keys(), key=lambda k: des[k][1])
     frameSize = math.ceil(np.sqrt(len(sortingIndices)))
     fig = plt.figure()
@@ -133,27 +154,14 @@ def plotDesBypart(originalParts, cleanedParts, mergedDes):
         curr = fig.add_subplot(frameSize, frameSize, step)
         for addedIndex in xrange(step):
             partNum = sortingIndices[addedIndex]
-            part = cleanedParts[partNum]
+            part = parts[partNum]
             offset = des[partNum][0]
             curr.plot(xrange(offset, offset+len(part)),part)
-            
-    fig = plt.figure()        
-    for step in xrange(1, len(sortingIndices)+1):
-        curr = fig.add_subplot(frameSize, frameSize, step)
-        for addedIndex in xrange(step):
-            partNum = sortingIndices[addedIndex]
-            part = originalParts[partNum]
-            offset = des[partNum][0]
-            curr.plot(xrange(offset, offset+len(part)),part)
-                        
+                           
 def plotReconstruction(cleanedParts, des):
     sortingIndices = sorted(des.keys(), key=lambda k: des[k][1])
     frameSize = math.ceil(np.sqrt(len(sortingIndices)))
     fig = plt.figure()
-    #def update_line(num, wholeOffset, whole, line):
-     #   line.set_data(xrange(wholeOffset,  wholeOffset + num), whole[:num])
-      #  return line,
-    #fig2, ax = plt.subplots()
     whole = []
     wholeOffset = np.Inf
     for step in xrange(1, len(sortingIndices)+1):

@@ -3,6 +3,9 @@ import LPF
 import stitchingLoop as sl
 from scipy.interpolate import interp1d
 
+def toList(vec):
+    return vec if type(vec) is list else vec.tolist()
+
 def alignByMaxMany(inputs):
     ret = []
     for input in inputs:

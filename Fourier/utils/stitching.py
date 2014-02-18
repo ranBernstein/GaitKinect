@@ -104,14 +104,21 @@ def createParts(input, plotNoise=False,  partsAmount = 9, noiseVariance = 6, cle
         plotParts(noisy_parts)
     return noisy_parts
 
-def plotParts(parts, xlabel = ' ', ylabel = ' ', titles = [' ']*100):
+def plotParts(parts, xlabel = ' ', ylabel = ' ', titles = [' ']*100, xlim=None, ylim=None):
     fig = plt.figure()
     for i, part in enumerate(parts):
         frameSize = math.ceil(np.sqrt(len(parts)))
-        curr = fig.add_subplot(frameSize,frameSize,parts.index(part)+1)
+        try:
+            curr = fig.add_subplot(frameSize,frameSize,i+1)
+        except Exception, e:
+            pass
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.title(titles[i])
+        if xlim is not None:
+            plt.xlim(xlim)
+        if ylim is not None:
+            plt.ylim(ylim)
         curr.plot(part)
 
 def appendFrac(whole, originalNext, averagedWhole=None):

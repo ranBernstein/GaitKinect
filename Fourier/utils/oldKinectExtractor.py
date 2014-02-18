@@ -20,9 +20,12 @@ def removeLowConfedence(time, angles, weights, plot=False):
                 plt.scatter(t, a, c='yellow', label='Low confedence level')
     return tmpTime, tmpAngles
 
-def clusterByTime(time, angles, plot=False):
+def clusterByTime(time, angles, plot=False, minimalCluster=15):
     fracs = []
-    lastTimeStamp = time[0]
+    try:
+        lastTimeStamp = time[0]
+    except Exception, e:
+        pass
     currTime = []
     currAngles = []
     for timeStamp, angle in zip(time, angles):
@@ -30,7 +33,7 @@ def clusterByTime(time, angles, plot=False):
             currTime.append(timeStamp)
             currAngles.append(angle)
         else:
-            if(len(currTime) > 15):
+            if(len(currTime) > minimalCluster):
                 fracs.append((currTime, currAngles))
             else:
                 if(plot):
@@ -38,18 +41,18 @@ def clusterByTime(time, angles, plot=False):
             currTime = [timeStamp]
             currAngles = [angle]
         lastTimeStamp = timeStamp
-    if(len(currTime) > 15):
+    if(len(currTime) > minimalCluster):
         fracs.append((currTime, currAngles))
     return fracs
 
-def filterOutliers(fracs, plot=True):    
+def filterOutliers(fracs, plot=False, prob = 0.2):    
     outliersTime = []
     outliersAngles = []
     newFracs = []
     for fracTime, fracAngles in fracs:
         g = gf.fitGassian(fracTime, fracAngles)
         for t, a in zip(fracTime, fracAngles):
-            if(g(t,a) < 0.2):
+            if(g(t,a) < prob):
                 outliersTime.append(t)
                 outliersAngles.append(a)
         newFracTime = [t for t in fracTime if t not in outliersTime]
@@ -84,8 +87,17 @@ def cleanFracs(fracs, plot=False):
         i+=1
     return cleanedParts, originalParts
 
+def stitchByDensity(time, angles, plot=False, startGrade=0.93, \
+        minimalOverlap=10, maximalOverlap=200, lengthFactor=0, density=10):
+    fracs = clusterByTime(time, angles, plot)
+    fracs = filterOutliers(fracs, plot)   
+    cleanedParts, originalParts = cleanFracs(fracs, plot)
+    stitchedParts, partDescriptors = loop.stitch(cleanedParts, startGrade, minimalOverlap, \
+                                         maximalOverlap, lengthFactor, density) 
+    return cleanedParts, stitchedParts, partDescriptors
+
 def stitchKinect(time, angles, weights=None, plot=False, startGrade=0.93, \
-        minimalOverlap=10, maximalOverlap=200, lengthFactor=0):
+        minimalOverlap=10, maximalOverlap=200, lengthFactor=0, density=10):
     if(plot):
         plt.figure()
         plt.scatter(time, angles, c='yellow', label='Low confedence level')
@@ -95,7 +107,7 @@ def stitchKinect(time, angles, weights=None, plot=False, startGrade=0.93, \
     fracs = filterOutliers(fracs, plot)   
     cleanedParts, originalParts = cleanFracs(fracs, plot)
     parts, partDescriptors = loop.stitch(cleanedParts, startGrade, minimalOverlap, \
-                                         maximalOverlap, lengthFactor)  
+                                         maximalOverlap, lengthFactor, density)  
     
     if(plot and len(parts) != 0):
         plt.figure()
@@ -103,5 +115,7 @@ def stitchKinect(time, angles, weights=None, plot=False, startGrade=0.93, \
         loop.plotDesBypart(originalParts, cleanedParts, partDescriptors)
         loop.plotReconstruction(cleanedParts, partDescriptors[-1])
         plt.show()
-        an.animate( parts[-1])
+        #an.animate( parts[-1])
     return parts[-1], partDescriptors[-1], fracs
+
+    
