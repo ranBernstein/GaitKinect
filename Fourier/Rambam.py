@@ -29,10 +29,10 @@ for end in seperators:
         if t > start and t < end:
             tmpTime.append(t)
             tmpAngles.append(a) 
-    plt.figure()
-    plt.plot(tmpTime, tmpAngles)
+    #plt.figure()
+    #plt.plot(tmpTime, tmpAngles)
     fracs = ke.clusterByTime(tmpTime, tmpAngles, False, minimalCluster)
-    prob = 0.3
+    prob = 0.2
     fracs = ke.filterOutliers(fracs, False, prob)
     cleanedParts, kuku = ke.cleanFracs(fracs, False)
     st.plotParts(cleanedParts, 'Frames', 'Knee angle', xrange(len(cleanedParts)), (0,100), (0,45))
