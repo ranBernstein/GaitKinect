@@ -194,4 +194,23 @@ def plotReconstruction(cleanedParts, des):
 
         
         
-        
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      

@@ -9,7 +9,7 @@ import utils.stitching as st
 fileName = 'inputs/ran_5_2_14_840.skl'#asc_gyro_l.skl'
 joint = 'AnkleRight_X'
 time, angles, kuku = ae.getAngleVec(fileName, joint, False)
-plt.plot(angles)
+#plt.plot(angles)
 minimalCluster=15
 fracs = ke.clusterByTime(time, angles, False, minimalCluster)
 prob = 0.3
@@ -35,14 +35,15 @@ plt.plot(str)
 """
 alphabetSize = 10
 sizeOfAtom=10
-radius=2
-numOfClusters=10
-vecs, mats = qu.createClustersAndMatchingMatrices(cleanedParts, atoms, radius, sizeOfAtom, 
-                                               alphabetSize, numOfClusters)
+#radius=2
+numOfClusters=12
+disFactor = 0.1
+vecs, mats = qu.createClustersAndMatchingMatrices(cleanedParts, atoms, 
+                                    numOfClusters, disFactor)
        
 strides = qu.createStridesFromAtoms(mats, vecs)
 st.plotParts(strides)
-
+plt.show()
 whole = qu.orderWithCost(strides)
 plt.figure()
 plt.plot(whole)

@@ -7,8 +7,13 @@ import periodAnalysisUtils as pe
 from munkres import Munkres
 import networkx as nx
 from munkres import Munkres
-from scipy.cluster.vq import kmeans2
+from scipy.cluster.vq import kmeans2, kmeans
 from openopt import TSP
+import utils.stitching as st
+import utils.interpulation as inter
+from operator import add, mul
+import math
+import oldKinectExtractor as ke
 
 def getEquallyWeighetedBins(values, alphabetSize = 10):
     range = np.linspace(np.min(values), np.max(values), 100000)
@@ -149,39 +154,143 @@ def appendAtom(atom1, atom2):
 def getDistanceBetweenAtoms(atom1, atom2):
     return np.abs(atom1[-1] - atom2[1]) + np.abs(atom1[-2] - atom2[0])
 
-def fusionByMaximumMatch(parts):
-    mat = []
-    for atom1 in parts:
-        row = []
-        for atom2 in parts:
-            row.append(getDistanceBetweenAtoms(atom1, atom2))
-        mat.append(row)
-    m = Munkres()
-    
+def extractPartialPattern(source, pattern):
+    bestDis=np.inf 
 
-def createClustersAndMatchingMatrices(parts, atoms, radius, sizeOfAtom, alphabetSize, numOfClusters):
+    minimalSize = 15
+    if(len(pattern) <= minimalSize or len(source) <= minimalSize):
+        return None
+    for i in xrange(len(pattern)):
+        for j in xrange(i+15, len(pattern)):
+            partialPattern = pattern[i:j]
+            dis, partOffset, _, _ = simpleDis(source, partialPattern)
+            dis -= len(partialPattern)*0.2
+            if(dis < bestDis):
+                bestDis = dis
+                bestPartOffset = partOffset
+                bestVec = source[partOffset:(partOffset+len(partialPattern))]
+                bestPattern = partialPattern
+                bestPatternOffset = i
+    return bestDis, bestPartOffset, bestPattern, bestPatternOffset
+
+def simpleDis(part, currAtom):
+    bestDis = np.inf
+    bestOffset = 0
+    for i, v in enumerate(part[:(-len(currAtom)+1)]):
+        dis = 0
+        for j, v in enumerate(currAtom):
+            dis += np.abs(part[i + j] -  currAtom[j])**2
+        dis /= len(currAtom)
+        dis = math.sqrt(dis)
+        if(dis < bestDis):
+            bestDis = dis
+            bestOffset = i
+    return bestDis, bestOffset, currAtom, 0
+
+def getAtomFromFrac(part, atom, calcDis):
+    #if(len(atom) > len(part)):
+    #    raise 'too short part'
+    verticalTranslations = [0, -5, -10]
+    scales = [0.7, 1, 1.2, 1.4, 1.6]
+    temporalScales =  [0.85, 1, 1.2, 1.4]
+    bestMatch = part[:len(atom)]
+    bestDis = np.inf
+    bestBias = None
+    bestScale = 1
+    for bias in verticalTranslations:
+        for scale in scales:
+            for  scaleFactor in temporalScales:       
+                currAtom = map(mul, [scale]*len(atom), atom)
+                currAtom = inter.scaleVec(currAtom, scaleFactor)
+                currAtom =  map(add, [bias]*len(currAtom), currAtom)
+                retVal = calcDis(part, currAtom)
+                if retVal is not None:
+                    dis, offset, pattern, patternOffset = retVal
+                else:
+                    continue
+                if(dis < bestDis):
+                    bestDis = dis
+                    bestMatch = part[offset:offset+len(pattern)]
+                    bestBias = bias
+                    bestScale = scale
+                    bestTemporalScale = scaleFactor
+                    bestAtom = pattern
+                    bestOffset = offset
+                    bestPartialPatternOffset = patternOffset
+    if(bestBias is None):
+        return None
+    return bestMatch, bestDis, bestAtom, bestBias, bestScale, bestTemporalScale, \
+        bestOffset, bestPartialPatternOffset
+                                                
+def createClustersAndMatchingMatrices(parts, atoms, numOfClusters, disFactor):
     vecs = []
     mats = []
     for atom in atoms:
-        vec = []
-        for part in parts:          
-            vec += getVecsInRadius(part, atom, radius, sizeOfAtom, alphabetSize)
-        print len(vec)
-        res, idx = kmeans2(np.array(vec), numOfClusters)
-        vecs.append(pe.toList(res))
+        closeVectors = []
+        tmp = []
+        fig = plt.figure()
+        i=1
+        for part in parts:
+            retVal = getAtomFromFrac(part, atom, simpleDis)
+            if retVal is None:
+                continue
+            frac,  dis, vecAtom, bias, bestScale, temporalScale, offset, _= retVal
+            tmp.append((dis, frac))
+            amplitude = np.max(vecAtom) - np.min(vecAtom)
+            if(dis > amplitude*disFactor):
+                continue
+            closeVectors.append(frac)
+            if(i>25):
+                continue
+            curr = fig.add_subplot(5,5,i)
+            i+=1
+            
+            plt.title('bias: ' + str(bias) + ' scale: ' + str(bestScale) + 
+                ' bestTemporalScale: ' + str(temporalScale) + ' dis: ' + str(dis))
+            curr.plot(part, c='b')
+            rng = xrange(offset, offset + len(frac))
+            curr.plot(rng, vecAtom, c='g')
+            curr.plot(rng, frac, c='r')
+            #plt.show()
+        print len(tmp), len(closeVectors)
+        if(len(closeVectors) < numOfClusters):
+            tmp = sorted(tmp, key=lambda tup: tup[0])
+            clusteredVectors = [t[1] for t in tmp[:numOfClusters]]
+        else:
+            lengthCounter = {}
+            for vec in closeVectors:
+                lengthCounter[len(vec)] = lengthCounter.get(len(vec), []) + [vec]
+            residum = len(closeVectors)%numOfClusters
+            clusteredVectors = []
+            tmpNumOfClusters = numOfClusters
+            last = len(lengthCounter) - 1
+            for i, (vecLen, sameLengthVecs) in enumerate(lengthCounter.items()):
+                #if(vecLen <= len(sameLengthVecs)):
+                    #sameLengthVecs, idx = kmeans2(np.array(sameLengthVecs), max(1, int(float(numOfClusters)*vecLen/len(closeVectors))))
+                numOfClusterPerLength = int(round(float(numOfClusters)*len(sameLengthVecs)/len(closeVectors)))
+                numOfClusterPerLength = min(numOfClusterPerLength, tmpNumOfClusters) if i!=last else tmpNumOfClusters
+                tmpNumOfClusters -= numOfClusterPerLength
+                if(numOfClusterPerLength == 0):
+                    continue
+                sameLengthVecs, idx = kmeans(np.array(sameLengthVecs), numOfClusterPerLength)
+                for v in sameLengthVecs:
+                    clusteredVectors.append(pe.toList(v))
+                #clusteredVectors = clusteredVectors + sameLengthVecs
+
+        vecs.append(pe.toList(clusteredVectors))
         if(len(vecs) > 1):
             last = vecs[-2]
             mat = []
             for atom1 in last:
                 row = []
-                for atom2 in res:
+                for atom2 in clusteredVectors:
                     row.append(getDistanceBetweenAtoms(atom1, atom2))
                 mat.append(row)
             mats.append(mat)
         if(len(vecs)==len(atoms)):
             next = vecs[0]
             mat = []
-            for atom1 in res:
+            for atom1 in clusteredVectors:
                 row = []
                 for atom2 in next:
                     row.append(getDistanceBetweenAtoms(atom1, atom2))
@@ -189,13 +298,17 @@ def createClustersAndMatchingMatrices(parts, atoms, radius, sizeOfAtom, alphabet
             mats.append(mat)  
     return vecs, mats
 
-def createStridesFromAtoms(mats, atoms): 
+def createStridesFromAtoms(mats, vecs): 
     m = Munkres()
-    strides = atoms[0]
+    strides = vecs[0]
     for i,mat in enumerate(mats[:-1]):
         indexes = m.compute(mat)
         for row, col in indexes:
-            strides[row] = appendAtom(strides[row], atoms[(i+1)][col])
+            #try:
+            if(row < len(strides)):
+                strides[row] = appendAtom(strides[row], vecs[(i+1)][col])
+            #except Exception, e:
+            #   pass
     return strides
 
 def orderWithCost(strides):
@@ -204,7 +317,7 @@ def orderWithCost(strides):
     nodes=[(i1,i2,{'cost':getDistanceBetweenAtoms(stride1, stride2)}) for i1,stride1 in enumerate(strides) for i2,stride2 in enumerate(strides) if i1 != i2]
     G.add_edges_from(nodes)
     objective = lambda values: values['cost'] 
-    p = TSP(G, objective = objective,  start = 0, returnToStart=False, fTol=11*N)
+    p = TSP(G, objective = objective,  start = 0, returnToStart=False, fTol=100*N)
     r = p.solve('interalg') 
     print(r.nodes)
     print(r.edges) # (node_from, node_to)
@@ -214,31 +327,36 @@ def orderWithCost(strides):
         whole = appendAtom(whole, strides[n])
     return whole 
 
-#get common patterns
-"""
-fig = plt.figure()
-for i in range(49):
-    mostCommon = ngrams_statistics_sorted[i][0]
-    curr = fig.add_subplot(7,7,i+1)
-    amount = ngrams_statistics_sorted[i][1]
-    plt.title(amount)
-    vec = qu.fromStr2Vec(bins, mostCommon)
-    curr.plot(vec)
-"""
-"""
-plt.hist(angles, bins=100)
-plt.title('Uniform bins')
-plt.xlabel('Bin index')
-plt.ylabel('Amount of values')
-plt.xlim(0,100)
-"""
-
-
-"""
-plt.figure()
-plt.hist(angles, bins=newBins)
-plt.title('Equally distributed bins')
-plt.xlabel('Bin index')
-plt.ylabel('Amount of values')
-"""
-
+def doRambamAlgo(time, values, numOfClusters, disFactor=0.2):
+    atoms = [
+             [14, 15, 17, 19, 24, 28, 33, 33, 33, 33],
+             [33, 33, 33, 33, 28, 24, 19, 17, 15, 14],
+             [15, 14, 12, 12, 14, 15, 16, 17.5, 17.5, 17.5],
+             [17.5, 17.5, 16, 15, 14, 13, 12, 12, 14, 15]
+        ]
+    minimalCluster = len(atoms[0])
+    fracs = ke.clusterByTime(time, values, False, minimalCluster)
+    #originalFracs = copy.deepcopy(fracs)
+    prob = 0.05
+    fracs = ke.filterOutliers(fracs, False, prob)
+    i=0
+    parts, kuku = ke.cleanFracs(fracs, False)
+    vecs, mats = createClustersAndMatchingMatrices(parts, atoms, numOfClusters, disFactor)
+    strides = createStridesFromAtoms(mats, vecs)
+    if(numOfClusters > 2):
+        whole = orderWithCost(strides)
+        
+        xlabel = 'Frames(each frame is 33 miliseconds)'
+        ylabel = 'Right knee angle (in degrees)'
+        st.plotParts(strides, xlabel, ylabel, xrange(len(strides)))
+        
+    else: 
+        if(numOfClusters == 2) :
+            byOrderDis = getDistanceBetweenAtoms(strides[0], strides[1])
+            byOrder = appendAtom(strides[0], strides[1])
+            inverseDis = getDistanceBetweenAtoms(strides[1], strides[0])
+            inverse = appendAtom(strides[1], strides[0])
+            whole = byOrder if byOrderDis < inverseDis else inverse
+        else:
+            whole = strides[0]
+    return whole

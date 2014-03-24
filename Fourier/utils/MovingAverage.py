@@ -1,12 +1,13 @@
 import numpy as np
 
-def partsmovingAverage(parts, window_size=16, factor=1.3):
+def partsmovingAverage(parts, window_size=8, factor=1.3):
     cleanParts = []
     for part in parts:
         clean = movingAverage(part, window_size, factor)
         cleanParts.append(clean)
     return cleanParts
-def movingAverage(interval, window_size=16, factor=1.3):
+
+def movingAverage(interval, window_size, factor):
     interval = interval if type(interval) is list else interval.tolist()
     if(window_size %2 == 0):
         window_size += 1

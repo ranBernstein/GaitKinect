@@ -79,7 +79,7 @@ def cleanFracs(fracs, plot=False):
         length = int((time[-1] - time[0]) / 30)
         time, values  = inter.getUniformSampled(time, values, length)
         originalParts.append(values)
-        values = ma.movingAverage(values, 8, 1.15)
+        values = ma.movingAverage(values, 8, 1.4)
         if(plot):
             curr = figCleaned.add_subplot(frameSize, frameSize, i)
             curr.plot(time,values)
