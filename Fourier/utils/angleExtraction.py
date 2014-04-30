@@ -104,6 +104,30 @@ def getAngleFromSplited(headers, splited, jointStr, checkConfedence=True):
     retVal = a if checkConfedence else (a, weight)
     return retVal
 
+#for the Vicon
+def getAngleByColumns(splited, headers, fatherStr, midStr, childStr):
+    fatherCol = headers.index(fatherStr)
+    midCol = headers.index(midStr)
+    childCol = headers.index(childStr)
+    try:
+        #print 'kuku:', splited[childCol]
+        x = float(splited[childCol])
+        y = float(splited[childCol+1])
+        z = float(splited[childCol+2])
+        father_x = float(splited[midCol])
+        father_y = float(splited[midCol+1])
+        father_z = float(splited[midCol+2])
+        grandFather_x = float(splited[fatherCol])
+        grandFather_y = float(splited[fatherCol+1])
+        grandFather_z = float(splited[fatherCol+2])
+        v1, v2 = createVectors(x, y, z, father_x,father_y,father_z, grandFather_x,grandFather_y,grandFather_z)
+        if(length(v1) == 0 or length(v2) == 0):
+            return None
+        a = angle(v1, v2)
+        return a
+    except Exception, e:
+        return None
+
 def getAngleVec(filePath, jointStr, checkConfedence=True):
     f = open(filePath, 'r')
     headers = f.readline().split()

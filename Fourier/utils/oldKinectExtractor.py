@@ -64,7 +64,7 @@ def filterOutliers(fracs, plot=False, prob = 0.2):
         plt.scatter(outliersTime, outliersAngles, c='gray', label='Clusters outliers')
     return newFracs
 
-def cleanFracs(fracs, plot=False):
+def cleanFracs(fracs, plot=False, MAwindowSize=8, MAexp=1.4):
     frameSize = math.ceil(np.sqrt(len(fracs)))    
     cleanedParts = []
     originalParts = []
@@ -79,7 +79,7 @@ def cleanFracs(fracs, plot=False):
         length = int((time[-1] - time[0]) / 30)
         time, values  = inter.getUniformSampled(time, values, length)
         originalParts.append(values)
-        values = ma.movingAverage(values, 8, 1.4)
+        values = ma.movingAverage(values, MAwindowSize, MAexp)
         if(plot):
             curr = figCleaned.add_subplot(frameSize, frameSize, i)
             curr.plot(time,values)

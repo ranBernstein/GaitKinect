@@ -19,9 +19,19 @@ plt.ylabel(joint + ' angle')
 fig_uniform = plt.figure()
 data = []
 tags = []
+out = open('out', 'w')
+out.write('@relation weka.kuku\n\n')
+for i in range(numOfFeatures):
+    out.write('@attribute a'+str(i)+ ' numeric\n')
+st=''
+for i,s in enumerate(subjects):
+    st+='sub'+str(s)
+    if i!= len(subjects)-1:
+        st+=','
+out.write('@attribute class {'+st+'}\n\n@data\n\n')
 for subject in subjects:
     for stride in xrange(1,13):
-        file = 'AMCs/subjects/' + str(subject) + '/' + str(stride) + '.amc'
+        file = '../AMCs/subjects/' + str(subject) + '/' + str(stride) + '.amc'
         try:
             input = getAMCperiod(joint, file)
         except:
@@ -31,13 +41,16 @@ for subject in subjects:
         sub.plot(range(len(input)), input)
         sub_uniform = fig_uniform.add_subplot(frameSize*110 + subjects.index(subject))
         new_time, uniform_input = inter.getUniformSampled(xrange(len(input)), input, numOfFeatures)
+        for angle in uniform_input:
+            out.write(str(angle)+',')
+        out.write(str(subject)+'\n')
         sub_uniform.plot( xrange(numOfFeatures), uniform_input)
         data.append(uniform_input)
         tags.append(subject)
         plt.xlabel('Time (in frames)')
         plt.ylabel(joint + ' angle')
         plt.title('subject: ' + str(subject))
-
+"""
 cl = KNeighborsClassifier()
 cl.n_neighbors = 5
 cl.weights = 'distance' 
@@ -58,7 +71,7 @@ plt.plot(testSizes, scores)
 plt.xlabel('Test set size)')
 plt.ylabel('Prediction precision')
 plt.title('Prediction precision for 4 subjects, data set size is 43')
-
+"""
 plt.show()
 
 
