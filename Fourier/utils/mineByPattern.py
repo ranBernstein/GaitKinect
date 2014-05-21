@@ -34,3 +34,28 @@ def mergeVecs(first, firstOffset, firstList, second, secondOffset, secondList):
     tail = second[len(common):] if  secondOffset + len(second) > firstOffset + len(first) \
         else first[len(common):]
     return head + common + tail, firstOffset, firstList+secondList
+
+def matchFracsByPositionInCycle(minedParts):
+    changeWasMade = True
+    while(changeWasMade):
+        changeWasMade = False
+        for i in xrange(len(minedParts)):
+            if changeWasMade:
+                break
+            for j in xrange(i):
+                dis = getDistanceBetweenFracs(minedParts[i][0], minedParts[i][1], 
+                                              minedParts[j][0], minedParts[j][1])
+                if(dis > 3):
+                    continue
+                #print dis 
+                retVal = mergeVecs(minedParts[i][0], minedParts[i][1],  
+                    minedParts[i][2], minedParts[j][0], minedParts[j][1], minedParts[j][2])
+                if(retVal is None):
+                    continue
+                merged, off, newList = retVal
+                del minedParts[i]
+                del minedParts[j]
+                minedParts.append((merged, off, newList))
+                changeWasMade = True
+                break
+    return minedParts

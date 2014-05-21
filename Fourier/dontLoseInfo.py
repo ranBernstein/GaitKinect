@@ -62,28 +62,8 @@ for part in parts:
         break
     i+=1
 originalParts= copy.deepcopy(minedParts)
-changeWasMade = True
-while(changeWasMade):
-    changeWasMade = False
-    for i in xrange(len(minedParts)):
-        if changeWasMade:
-            break
-        for j in xrange(i):
-            dis = mbp.getDistanceBetweenFracs(minedParts[i][0], minedParts[i][1], 
-                                          minedParts[j][0], minedParts[j][1])
-            if(dis > 3):
-                continue
-            print dis 
-            retVal = mbp.mergeVecs(minedParts[i][0], minedParts[i][1],  
-                minedParts[i][2], minedParts[j][0], minedParts[j][1], minedParts[j][2])
-            if(retVal is None):
-                continue
-            merged, off, newList = retVal
-            del minedParts[i]
-            del minedParts[j]
-            minedParts.append((merged, off, newList))
-            changeWasMade = True
-            break
+minedParts = mbp.matchFracsByPositionInCycle(minedParts)
+
 fig = plt.figure()
 i = 1
 strides = []

@@ -77,6 +77,41 @@ def calcAngle(x1, y1, z1, x2, y2, z2, x3, y3, z3):
 def dis(x1, x2, y1, y2, z1, z2):
     return sqrt((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)
 
+def fromIndex2Point(line, i):
+    return line[i], line[i+1], line[i+2]
+ 
+def calcDisFromIndices(line, i1, i2):
+    return dis(line[i1], line[i2], line[i1+1], line[i2+1], line[i1+2], line[i2+2])
+
+def calcJointsAverage(line, jointsIndices):
+    xSum, ySum, zSum = 0,0,0
+    for i in jointsIndices:
+        xSum, ySum, zSum = xSum+line[i], ySum+line[i+1], zSum+line[i+2]
+    xSum, ySum, zSum = xSum/len(jointsIndices), ySum/len(jointsIndices), zSum/len(jointsIndices)
+    return xSum, ySum, zSum
+
+def calcAverageJointDistanceFromCenter(line, jointsIndices):
+    center = calcJointsAverage(line, jointsIndices)
+    sum=0
+    for i in jointsIndices:
+        sum+= dis(center[0], line[i],center[1], line[i+1],center[2], line[i+2])
+    return sum/len(jointsIndices)
+
+def distancePointLine (px, py, pz, x1, y1, z1, x2, y2, z2):
+    lineMag = length([x2-x1,y2- y1,z2- z1])
+    u = ((px - x1) * (x2 - x1)) + ((py - y1) * (y2 - y1)) + ((pz - z1) * (z2 - z1))
+    u = u / (lineMag * lineMag)
+    ix = x1 + u * (x2 - x1)
+    iy = y1 + u * (y2 - y1)
+    iz = z1 + u * (z2 - z1)
+    return length([px-ix, py-iy, pz-iz])
+
+def getDisFromAxeByIndecies(line, pointIndex, axeIndex1, axeIndex2):
+    return distancePointLine(line[pointIndex], line[pointIndex+1], line[pointIndex+2], \
+                             line[axeIndex1],line[axeIndex1+1],line[axeIndex1+2], \
+                             line[axeIndex2],line[axeIndex2+1],line[axeIndex2+2])
+    
+
 def getAngleFromSplited(headers, splited, jointStr, checkConfedence=True):
     jointCol = headers.index(jointStr)
     x = float(splited[jointCol])

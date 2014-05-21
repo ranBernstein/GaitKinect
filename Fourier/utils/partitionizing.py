@@ -1,7 +1,9 @@
 import numpy as np
 from scipy.signal import argrelextrema
 from cluster import  HierarchicalClustering
-from stitching import MAXIMA_ORDER, CLUSTER_COEFF, plotParts
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+import utils.stitching as st
 """
 file = 'AMCs/673.amc'
 joint = 'ltibia'
@@ -56,6 +58,19 @@ def breakToPeriods(arg, maximaOrder=20, clusteringGranularity = 0.5, file=False)
             pass
         open = close
     return periods
+
+def plotStas(periods, title):
+    st.plotParts(periods)
+    vec = [len(period) for period in periods]
+    plt.figure()
+    mean = np.mean(vec)
+    std = np.std(vec)
+    skew =stats.skew(vec)
+    ku = stats.kurtosis(vec)
+    plt.title(title +' mean: '+ str(mean)+' std: '+str(std)+' skew: '+str(skew)+' kurtosis: '+str(ku))
+    plt.scatter(range(len(vec)), vec)
+    plt.figure()
+    plt.hist(vec)
 """
 #f = open('../outputs/stitching/greedy_with_noise/stitched.txt', 'r')
 breakToPeriods('../outputs/stitching/greedy_with_noise/stitched.txt', True)

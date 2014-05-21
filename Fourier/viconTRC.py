@@ -1,11 +1,8 @@
 import matplotlib.pyplot as plt
 import utils.angleExtraction as ae
-import utils.oldKinectExtractor as ke
 import utils.stitching as st
 import numpy as np
-import utils.periodAnalysisUtils as pa
 import utils.partitionizing as part
-import scipy.stats as stats
 f = open('myVicon/Yoni dyn 01.trc', 'r')
 l = []
 i=0
@@ -82,21 +79,10 @@ for cluster in anglesSplited:
             min = np.argmin(cycle)
             stances.append(cycle[:min])
             swings.append(cycle[min:])
-def plotStas(periods, title):
-    st.plotParts(periods)
-    vec = [len(period) for period in periods]
-    plt.figure()
-    mean = np.mean(vec)
-    std = np.std(vec)
-    skew =stats.skew(vec)
-    ku = stats.kurtosis(vec)
-    plt.title(title +' mean: '+ str(mean)+' std: '+str(std)+' skew: '+str(skew)+' kurtosis: '+str(ku))
-    plt.scatter(range(len(vec)), vec)
-    plt.figure()
-    plt.hist(vec)
-plotStas(strides, 'Strides')
-plotStas(stances, 'stances')
-plotStas(swings, 'swings')
+
+part.plotStas(strides, 'Strides')
+part.plotStas(stances, 'stances')
+part.plotStas(swings, 'swings')
 plt.show()
 
 

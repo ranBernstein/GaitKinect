@@ -190,9 +190,10 @@ def simpleDis(part, currAtom):
 def getAtomFromFrac(part, atom, calcDis):
     #if(len(atom) > len(part)):
     #    raise 'too short part'
-    verticalTranslations = [0, -5, -10]
-    scales = [0.7, 1, 1.2, 1.4, 1.6]
-    temporalScales =  [0.85, 1, 1.2, 1.4]
+    sizeFactor=2
+    verticalTranslations = [10, 0, -10]
+    scales = [0.7, 1, 1.2]
+    temporalScales =  [0.85, 1, 1.2, 1.45]
     bestMatch = part[:len(atom)]
     bestDis = np.inf
     bestBias = None
@@ -203,6 +204,44 @@ def getAtomFromFrac(part, atom, calcDis):
                 currAtom = map(mul, [scale]*len(atom), atom)
                 currAtom = inter.scaleVec(currAtom, scaleFactor)
                 currAtom =  map(add, [bias]*len(currAtom), currAtom)
+                
+                dis = np.inf
+                costs = {}
+                minimalOverlap = 10
+                for i in range(len(part)-minimalOverlap+1):
+                    for j in range(len(currAtom)-minimalOverlap+1):
+                        tmp=0
+                        for k in range(minimalOverlap):
+                            tmp+=np.abs(part[i+k] - currAtom[j+k])
+                        costs[(i,j,minimalOverlap-1)] = tmp/(minimalOverlap**sizeFactor)
+                        for size in range(minimalOverlap, min(len(part), len(currAtom))):
+                            if j+size>len(currAtom) or i+size>len(part):
+                                break
+                            d = np.abs(part[i+size-1] - currAtom[j+size-1])
+                            costs[(i,j,size)] = (costs[(i,j,size-1)]*((size-1)**sizeFactor)+d)/(size**sizeFactor) - size/1000.0
+                            if costs[(i,j,size)] < dis:
+                                dis = costs[(i,j,size)]
+                                offset = i
+                                pattern = currAtom[j:j+size]
+                                patternOffset = j
+                                bestDis = dis
+                                
+                                bestMatch = part[offset:offset+len(pattern)]
+                                bestBias = bias
+                                bestScale = scale
+                                bestTemporalScale = scaleFactor
+                                bestAtom = pattern
+                                bestOffset = offset
+                                bestPartialPatternOffset = patternOffset
+                                """
+                                if dis < 0.02:
+                                    plt.title(dis)
+                                    plt.plot(currAtom[j:j+size])
+                                    plt.plot(part[i:i+size])
+                                    plt.show()
+                                    pass
+                                """
+                """
                 retVal = calcDis(part, currAtom)
                 if retVal is not None:
                     dis, offset, pattern, patternOffset = retVal
@@ -217,6 +256,7 @@ def getAtomFromFrac(part, atom, calcDis):
                     bestAtom = pattern
                     bestOffset = offset
                     bestPartialPatternOffset = patternOffset
+                """
     if(bestBias is None):
         return None
     return bestMatch, bestDis, bestAtom, bestBias, bestScale, bestTemporalScale, \
