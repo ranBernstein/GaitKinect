@@ -70,6 +70,7 @@ def angle(v1, v2):
 
 def createVectors(x1, y1, z1, x2, y2, z2, x3, y3, z3):
     return [x2-x3, y2-y3, z2-z3], [x1-x2, y1-y2, z1-z2]
+
 def calcAngle(x1, y1, z1, x2, y2, z2, x3, y3, z3):
     v1, v2 = createVectors(x1, y1, z1, x2, y2, z2, x3, y3, z3)
     return angle(v1,v2)
@@ -90,12 +91,15 @@ def calcJointsAverage(line, jointsIndices):
     xSum, ySum, zSum = xSum/len(jointsIndices), ySum/len(jointsIndices), zSum/len(jointsIndices)
     return xSum, ySum, zSum
 
-def calcAverageJointDistanceFromCenter(line, jointsIndices):
-    center = calcJointsAverage(line, jointsIndices)
+def calcAverageDistanceOfIndicesFromPoint(line, jointsIndices,px,py,pz):
     sum=0
     for i in jointsIndices:
-        sum+= dis(center[0], line[i],center[1], line[i+1],center[2], line[i+2])
+        sum+= dis(px, line[i],py, line[i+1],pz, line[i+2])
     return sum/len(jointsIndices)
+
+def calcAverageJointDistanceFromCenter(line, jointsIndices):
+    center = calcJointsAverage(line, jointsIndices)
+    return calcAverageDistanceOfIndicesFromPoint(line, jointsIndices,*center)
 
 def distancePointLine (px, py, pz, x1, y1, z1, x2, y2, z2):
     lineMag = length([x2-x1,y2- y1,z2- z1])
@@ -111,6 +115,11 @@ def getDisFromAxeByIndecies(line, pointIndex, axeIndex1, axeIndex2):
                              line[axeIndex1],line[axeIndex1+1],line[axeIndex1+2], \
                              line[axeIndex2],line[axeIndex2+1],line[axeIndex2+2])
     
+def calcAverageDistanceOfIndicesFromLine(line, jointsIndices,axeIndex1, axeIndex2):
+    sum=0
+    for i in jointsIndices:
+        sum+= getDisFromAxeByIndecies(line, i, axeIndex1, axeIndex2)
+    return sum/len(jointsIndices)
 
 def getAngleFromSplited(headers, splited, jointStr, checkConfedence=True):
     jointCol = headers.index(jointStr)

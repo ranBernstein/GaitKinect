@@ -1,6 +1,7 @@
 import numpy as np
 from operator import sub
 import utils.periodAnalysisUtils as pe
+import networkx as nx
 
 def getDistanceBetweenFracs(f1, o1, f2, o2):
     if(o1 > o2):
@@ -35,7 +36,7 @@ def mergeVecs(first, firstOffset, firstList, second, secondOffset, secondList):
         else first[len(common):]
     return head + common + tail, firstOffset, firstList+secondList
 
-def matchFracsByPositionInCycle(minedParts):
+def matchFracsByPositionInCycle(minedParts, numberOfStrides):
     changeWasMade = True
     while(changeWasMade):
         changeWasMade = False

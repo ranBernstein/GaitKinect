@@ -9,7 +9,7 @@ import copy
 import utils.MovingAverage as ma
 import utils.partitionizing as prt
 
-fileName = 'myKinect/y1.skl'
+fileName = 'myKinect/i1.skl'
 joint = 'KneeLeft_X'
 time, angles= ae.getAngleVec(fileName, joint, True)
 
@@ -20,7 +20,7 @@ prob = 0.1
 fracs = ke.filterOutliers(fracs, False, prob)
 i=0
 cleanedParts, _ = ke.cleanFracs(fracs, False, 20, 1.1)
-st.plotParts(cleanedParts)
+#st.plotParts(cleanedParts)
 
 #Creating pattern to mine for
 up = np.linspace(40, 70, 20)
@@ -29,23 +29,26 @@ end = 45
 up = (np.linspace(start,end,15)).tolist()
 down = list(reversed(up))
 pattern = [start, start, start] + up + ([end]*5) + down + [start, start, start]
-plt.figure()
-plt.plot(pattern)
+lenOfCycle = len(pattern)
+#plt.figure()
+#plt.plot(pattern)
 fig = plt.figure()
 framSize= np.ceil(np.sqrt(len(cleanedParts)))
 minedParts = []
 minedPartsAsList = []
 dises = []
 threshold = 0
-
+sizeFactor=2
 #cleanedParts = cleanedParts[:3]
 lengths = []
 for index, part in enumerate(cleanedParts):
-    retVal = qu.getAtomFromFrac(part, pattern, qu.extractPartialPattern)
+    retVal = qu.getAtomFromFrac(part, pattern, sizeFactor)
     if retVal is None:
         continue
     frac,  dis, vecAtom, bias, bestScale, temporalScale, partOffset,\
         cycleOffset = retVal
+    if cycleOffset+len(frac)>np.ceil(temporalScale*lenOfCycle):
+        print 'muku', index
     curr = fig.add_subplot(framSize,framSize,index+1)
     plt.title('dis: '+str(dis)+'\n temporalScale: ' + str(temporalScale)+ 
               ',\n scale: '+str(bestScale))
@@ -55,15 +58,16 @@ for index, part in enumerate(cleanedParts):
     curr.plot(rng, vecAtom, c='g')
     curr.plot(rng, frac, c='r') 
     threshold +=dis
-    minedParts.append((frac, cycleOffset, [i]))
+    minedParts.append((frac, cycleOffset, [index]))
     minedPartsAsList.append(frac)
     dises.append(dis)
     lengths.append(len(frac))
-st.plotParts(minedPartsAsList)
+#st.plotParts(minedPartsAsList)
 
-#threshold/=len(cleanedParts)
+
+
+#Filter the best matches
 threshold = np.percentile(dises, 60)
-#minedPartsAsListCopy = copy.deepcopy(minedPartsAsList)
 newMinedParts=[]
 newMinedPartsAsList=[]
 for i, dis in enumerate(dises):
@@ -74,8 +78,41 @@ minedPartsAsList = newMinedPartsAsList
 minedParts = newMinedParts
 st.plotParts(minedPartsAsList, 'Frames', 'Angle', lengths)
 #plt.show()
+def getOverlapSize(frac1, frac2,  cycleOffset1, cycleOffset2):
+    end1 = (cycleOffset1 + len(frac1))%lenOfCycle
+    if end1 < cycleOffset2:
+        val = lenOfCycle - cycleOffset2 + end1
+    else:
+        val = end1 - cycleOffset2
+    return min(val, len(frac1), len(frac2))
 
-whole = qu.orderWithCost(minedPartsAsList)
+def getDistanceBetweenFracs(part1, part2):
+    frac1, frac2 = part1[0], part2[0]
+    cycleOffset1, cycleOffset2 = part1[1], part2[1]
+    if cycleOffset1 + len(frac1) < cycleOffset2:
+        print 'np.inf'
+        return np.inf
+    overLapSize = getOverlapSize(frac1, frac2,  cycleOffset1, cycleOffset2)
+    if overLapSize > lenOfCycle or overLapSize > len(frac1) or overLapSize > len(frac2):
+        #overLapSize = getOverlapSize(frac1, frac2,  cycleOffset1, cycleOffset2)
+        print 'overLapSize > lenOfCycle'
+    try:
+        return np.mean(np.abs(np.array(frac1[-overLapSize:]) - np.array(frac2[:overLapSize])))
+    except:
+        print '102'
+
+def appendFracs(part1, part2):
+    frac1, frac2 = part1[0], part2[0]
+    cycleOffset1, cycleOffset2 = part1[1], part2[1]
+    overLapSize = getOverlapSize(frac1, frac2,  cycleOffset1, cycleOffset2)
+    overlap = (np.array(frac1[-overLapSize:]) + np.array(frac2[:overLapSize]))/2
+    try:
+        overlap = overlap.tolist()
+        return frac1[:-overLapSize] + overlap + frac2[overLapSize:]
+    except:
+        pass
+
+whole = qu.orderWithCost(minedParts, getDistanceBetweenFracs, appendFracs)
 plt.figure()
 plt.plot(whole)
 plt.plot(ma.movingAverage(whole, 10, 1.1))

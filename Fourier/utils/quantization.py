@@ -187,10 +187,7 @@ def simpleDis(part, currAtom):
             bestOffset = i
     return bestDis, bestOffset, currAtom, 0
 
-def getAtomFromFrac(part, atom, calcDis):
-    #if(len(atom) > len(part)):
-    #    raise 'too short part'
-    sizeFactor=2
+def getAtomFromFrac(part, atom, sizeFactor=2):
     verticalTranslations = [10, 0, -10]
     scales = [0.7, 1, 1.2]
     temporalScales =  [0.85, 1, 1.2, 1.45]
@@ -198,6 +195,7 @@ def getAtomFromFrac(part, atom, calcDis):
     bestDis = np.inf
     bestBias = None
     bestScale = 1
+    dis = np.inf
     for bias in verticalTranslations:
         for scale in scales:
             for  scaleFactor in temporalScales:       
@@ -205,7 +203,7 @@ def getAtomFromFrac(part, atom, calcDis):
                 currAtom = inter.scaleVec(currAtom, scaleFactor)
                 currAtom =  map(add, [bias]*len(currAtom), currAtom)
                 
-                dis = np.inf
+                
                 costs = {}
                 minimalOverlap = 10
                 for i in range(len(part)-minimalOverlap+1):
@@ -218,12 +216,12 @@ def getAtomFromFrac(part, atom, calcDis):
                             if j+size>len(currAtom) or i+size>len(part):
                                 break
                             d = np.abs(part[i+size-1] - currAtom[j+size-1])
-                            costs[(i,j,size)] = (costs[(i,j,size-1)]*((size-1)**sizeFactor)+d)/(size**sizeFactor) - size/1000.0
+                            costs[(i,j,size)] = (costs[(i,j,size-1)]*((size-1)**sizeFactor)+d)/(size**sizeFactor) - size/5000.0
                             if costs[(i,j,size)] < dis:
                                 dis = costs[(i,j,size)]
                                 offset = i
                                 pattern = currAtom[j:j+size]
-                                patternOffset = j
+                                bestPartialPatternOffset = j
                                 bestDis = dis
                                 
                                 bestMatch = part[offset:offset+len(pattern)]
@@ -232,7 +230,6 @@ def getAtomFromFrac(part, atom, calcDis):
                                 bestTemporalScale = scaleFactor
                                 bestAtom = pattern
                                 bestOffset = offset
-                                bestPartialPatternOffset = patternOffset
                                 """
                                 if dis < 0.02:
                                     plt.title(dis)
@@ -351,10 +348,10 @@ def createStridesFromAtoms(mats, vecs):
             #   pass
     return strides
 
-def orderWithCost(strides):
+def orderWithCost(strides, costFunc=getDistanceBetweenAtoms, appendFunc=appendAtom):
     N = len(strides)
     G = nx.DiGraph()
-    nodes=[(i1,i2,{'cost':getDistanceBetweenAtoms(stride1, stride2)}) for i1,stride1 in enumerate(strides) for i2,stride2 in enumerate(strides) if i1 != i2]
+    nodes=[(i1,i2,{'cost':costFunc(stride1, stride2)}) for i1,stride1 in enumerate(strides) for i2,stride2 in enumerate(strides) if i1 != i2]
     G.add_edges_from(nodes)
     objective = lambda values: values['cost'] 
     p = TSP(G, objective = objective,  start = 0, returnToStart=False, fTol=100*N)
@@ -364,9 +361,11 @@ def orderWithCost(strides):
     print(r.Edges) # full info on edges; unavailable for solver sa yet
     whole = strides[r.nodes[0]]
     for n in r.nodes[1:]:
-        whole = appendAtom(whole, strides[n])
+        whole = appendFunc(whole, strides[n])
     return whole 
 
+
+    
 def doRambamAlgo(time, values, numOfClusters, disFactor=0.2):
     atoms = [
              [14, 15, 17, 19, 24, 28, 33, 33, 33, 33],
