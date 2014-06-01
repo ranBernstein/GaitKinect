@@ -1,5 +1,5 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
 def partsmovingAverage(parts, window_size=8, factor=1.3):
     cleanParts = []
     for part in parts:
@@ -23,7 +23,8 @@ def movingAverage(interval, window_size, factor):
     head = [np.mean(interval[:window_size])]*window_size
     tail = [np.mean(interval[-window_size:])]*window_size
     conv = np.convolve(head + interval + tail, window, 'same')
-    return conv[window_size:-window_size]
+    retVal = conv[window_size:-window_size] 
+    return retVal
 
 def mse(A, B):
     return ((np.array(A) - np.array(B)) ** 2).mean(axis=0)

@@ -2,7 +2,9 @@ import numpy as np
 from operator import sub
 import utils.periodAnalysisUtils as pe
 import networkx as nx
-
+import MovingAverage as ma
+import matplotlib.pyplot as plt
+import itertools
 def getDistanceBetweenFracs(f1, o1, f2, o2):
     if(o1 > o2):
         f1, o1, f2, o2 = f2, o2, f1, o1
@@ -60,3 +62,21 @@ def matchFracsByPositionInCycle(minedParts, numberOfStrides):
                 changeWasMade = True
                 break
     return minedParts
+
+def createFlippedUpattern(vec, length, repeatitionAmount=1):
+    up1 = np.linspace(0, 10, length/4).tolist()
+    up2 = np.linspace(10, 40, length/4).tolist()
+    down1 = np.linspace(40, 10, length/4).tolist()
+    down2 = np.linspace(10, 0, length/4).tolist()
+    pattern = up1 + up2 + down1 + down2
+    smoothedPattern = ma.movingAverage(pattern, length/5, 1.3)
+    pattern = smoothedPattern
+    pattern = [x-np.mean(pattern) for x in pattern]
+    fac = np.sqrt(np.var(vec)/np.var(pattern))
+    m1 = np.mean(vec)
+    pattern = [x*fac + m1 for x in pattern]
+    #retVal = list(itertools.repeat(pattern, repeatitionAmount))
+    retVal = pattern*repeatitionAmount
+    return retVal
+
+

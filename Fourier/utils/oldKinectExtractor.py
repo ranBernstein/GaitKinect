@@ -7,7 +7,7 @@ import utils.MovingAverage as ma
 import utils.stitchingLoop as loop
 import utils.animate as an
 
-MAXIMAL_TIME_GAP = 150
+MAXIMAL_FRAMES_GAP = 4
 def removeLowConfedence(time, angles, weights, plot=False):
     tmpTime = []
     tmpAngles = []  
@@ -20,16 +20,13 @@ def removeLowConfedence(time, angles, weights, plot=False):
                 plt.scatter(t, a, c='yellow', label='Low confedence level')
     return tmpTime, tmpAngles
 
-def clusterByTime(time, angles, plot=False, minimalCluster=15):
+def clusterByTime(time, frameNumbers, angles, plot=False, minimalCluster=15):
     fracs = []
-    try:
-        lastTimeStamp = time[0]
-    except Exception, e:
-        pass
+    lastFrameNum = frameNumbers[0]
     currTime = []
     currAngles = []
-    for timeStamp, angle in zip(time, angles):
-        if(timeStamp - lastTimeStamp < MAXIMAL_TIME_GAP):
+    for timeStamp, frameNum, angle in zip(time, frameNumbers, angles):
+        if(frameNum - lastFrameNum < MAXIMAL_FRAMES_GAP):
             currTime.append(timeStamp)
             currAngles.append(angle)
         else:
@@ -40,7 +37,7 @@ def clusterByTime(time, angles, plot=False, minimalCluster=15):
                     plt.scatter(currTime, currAngles, c='red', label='Weekly clustered samples')  
             currTime = [timeStamp]
             currAngles = [angle]
-        lastTimeStamp = timeStamp
+        lastFrameNum = frameNum
     if(len(currTime) > minimalCluster):
         fracs.append((currTime, currAngles))
     return fracs
@@ -69,21 +66,27 @@ def cleanFracs(fracs, plot=False, MAwindowSize=8, MAexp=1.4):
     cleanedParts = []
     originalParts = []
     if(plot):
-        figOrigin = plt.figure()
-        figCleaned = plt.figure()
+        pass
+        #figOrigin = plt.figure()
+        #figCleaned = plt.figure()
     i=1
     for time, values in fracs:
         if(plot):
-            curr = figOrigin.add_subplot(frameSize, frameSize, i)
-            curr.plot(time,values)
-        length = int((time[-1] - time[0]) / 30)
-        time, values  = inter.getUniformSampled(time, values, length)
+            pass
+            #curr = figOrigin.add_subplot(frameSize, frameSize, i)
+            #curr.plot(time,values)
+        #length = int((time[-1] - time[0]) / 30)
+        time, values  = inter.getUniformSampled(time, values)
         originalParts.append(values)
-        values = ma.movingAverage(values, MAwindowSize, MAexp)
+        cleanesdValues = ma.movingAverage(values, MAwindowSize, MAexp)
         if(plot):
-            curr = figCleaned.add_subplot(frameSize, frameSize, i)
-            curr.plot(time,values)
-        cleanedParts.append(values)
+            plt.figure()
+            plt.plot(values)
+            plt.plot(cleanesdValues)
+            plt.show()
+            #curr = figCleaned.add_subplot(frameSize, frameSize, i)
+            #curr.plot(time,values)
+        cleanedParts.append(cleanesdValues)
         i+=1
     return cleanedParts, originalParts
 

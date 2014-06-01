@@ -4,6 +4,24 @@ from pybrain.structure import FullConnection
 from pybrain.datasets import SupervisedDataSet
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.structure.modules import BiasUnit
+from pybrain.tools.neuralnets import NNregression
+from pybrain.tools.shortcuts import buildNetwork
+
+ds = SupervisedDataSet( 1, 1 )
+for i in range(20):
+    ds.appendLinked( [i], [i] )
+tstdata, trndata = ds.splitWithProportion( 0.25 )
+"""
+hidden_size = 1   
+net = buildNetwork( 1, hidden_size, 1, bias = True )
+trainer = BackpropTrainer( net, trndata )
+trainer.trainUntilConvergence( verbose = True, validationProportion = 0.15, maxEpochs = 1000, continueEpochs = 10 )
+print trndata
+print net.activateOnDataset( trndata )
+print net.params
+
+
+"""
 inLayer = LinearLayer(1)
 hiddenLayer = SigmoidLayer(10)
 outLayer = LinearLayer(1)
@@ -25,16 +43,13 @@ n.addConnection(b_to_out)
 
 n.sortModules()
 #print n.activate([1, 2])
-ds = SupervisedDataSet( 1, 1 )
-for i in range(100):
-    ds.appendLinked( [i], [i] )
-tstdata, trndata = ds.splitWithProportion( 0.25 )
+
 
 trainer = BackpropTrainer(n, trndata, momentum=0.9)#, verbose=True, weightdecay=0)
-print n.params
+#print n.params
 trainer.trainEpochs(10)
-print n.params
+#print n.params
+print trndata
 print n.activateOnDataset(trndata)
 #trainer.trainUntilConvergence(trndata, 100)
-#for input, expectedOutput in trndata:
-    #print input, expectedOutput, n.activate(input)
+

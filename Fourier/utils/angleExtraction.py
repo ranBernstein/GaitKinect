@@ -121,19 +121,19 @@ def calcAverageDistanceOfIndicesFromLine(line, jointsIndices,axeIndex1, axeIndex
         sum+= getDisFromAxeByIndecies(line, i, axeIndex1, axeIndex2)
     return sum/len(jointsIndices)
 
-def getAngleFromSplited(headers, splited, jointStr, checkConfedence=True):
+def getAngleFromSplited(headers, splited, jointStr, checkConfedence=True, version='OLD'):
     jointCol = headers.index(jointStr)
     x = float(splited[jointCol])
     y = float(splited[jointCol+1])
     z = float(splited[jointCol+2])
     tracked = int(splited[jointCol+3])
-    fatherStr = ancestorMap[jointStr]
+    fatherStr = ancestorMap[version][jointStr]
     fatherIndex_x = headers.index(fatherStr)
     father_x = float(splited[fatherIndex_x])
     father_y = float(splited[fatherIndex_x+1])
     father_z = float(splited[fatherIndex_x+2])
     father_tracked = int(splited[fatherIndex_x+3])
-    grandFatherIndex_x =  headers.index(ancestorMap[fatherStr])
+    grandFatherIndex_x =  headers.index(ancestorMap[version][fatherStr])
     grandFather_x = float(splited[grandFatherIndex_x])
     grandFather_y = float(splited[grandFatherIndex_x+1])
     grandFather_z = float(splited[grandFatherIndex_x+2])
@@ -172,17 +172,19 @@ def getAngleByColumns(splited, headers, fatherStr, midStr, childStr):
     except Exception, e:
         return None
 
-def getAngleVec(filePath, jointStr, checkConfedence=True):
+def getAngleVec(filePath, jointStr, checkConfedence=True, version='OLD'):
     f = open(filePath, 'r')
     headers = f.readline().split()
-    angles = []
     time = []
+    frameNumbers = []
+    angles = []
     weights = []
     for line in f:
         splited = line.split() 
-        timeStamp = int(splited[0])
+        timeStamp = int(splited[headers.index('timestamp')])
+        frameNum = int(splited[headers.index('framenum')])
         splited = np.array(splited)
-        retVal = getAngleFromSplited(headers, splited, jointStr, checkConfedence)
+        retVal = getAngleFromSplited(headers, splited, jointStr, checkConfedence, version)
         if(retVal is None):
             continue
         weight = None
@@ -191,10 +193,12 @@ def getAngleVec(filePath, jointStr, checkConfedence=True):
         else:
             angle, weight = retVal
         time.append(timeStamp)
+        frameNumbers.append(frameNum)
         angles.append(angle)
         if(weight is not None):
             weights.append(weight)
-    retVal = (time, angles) if checkConfedence else (time, angles, weights)
+    retVal = (time, frameNumbers, angles) if checkConfedence else \
+        (time, frameNumbers, angles, weights)
     return retVal
 
 def prepareAnglesFromInput(filePath, i, outputIndex, check, allByTime, allByJoint):

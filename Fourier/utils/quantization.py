@@ -187,7 +187,7 @@ def simpleDis(part, currAtom):
             bestOffset = i
     return bestDis, bestOffset, currAtom, 0
 
-def getAtomFromFrac(part, atom, sizeFactor=2):
+def getAtomFromFrac(part, atom, sizeFactor=2, minimalFracSize=15):
     verticalTranslations = [10, 0, -10]
     scales = [0.7, 1, 1.2]
     temporalScales =  [0.85, 1, 1.2, 1.45]
@@ -199,13 +199,11 @@ def getAtomFromFrac(part, atom, sizeFactor=2):
     for bias in verticalTranslations:
         for scale in scales:
             for  scaleFactor in temporalScales:       
-                currAtom = map(mul, [scale]*len(atom), atom)
+                currAtom = [scale*x for x in atom]
                 currAtom = inter.scaleVec(currAtom, scaleFactor)
                 currAtom =  map(add, [bias]*len(currAtom), currAtom)
-                
-                
                 costs = {}
-                minimalOverlap = 10
+                minimalOverlap = minimalFracSize
                 for i in range(len(part)-minimalOverlap+1):
                     for j in range(len(currAtom)-minimalOverlap+1):
                         tmp=0

@@ -25,7 +25,8 @@ Joints = enum(timestamp=0, framenum=1, adc0=2, adc1=3, gyroX=4, gyroY=5, gyroZ=6
               FootRight_X=83, FootRight_Y=84, FootRight_Z=85, FootRight_tracked=86, 
               FloorPlane_A=87, FloorPlane_B=88, FloorPlane_C=89, FloorPlane_D=90)
 """
-ancestorMap = {
+ancestorMap = { 
+     'OLD':{
                'HandRight_X': 'WristRight_X',
                'HandRight_Y': 'WristRight_Y',
                'HandRight_Z': 'WristRight_Z',
@@ -96,7 +97,101 @@ ancestorMap = {
                'FootLeft_X': 'AnkleLeft_X',
                'FootLeft_Y': 'AnkleLeft_Y',
                'FootLeft_Z': 'AnkleLeft_Z'
-               }
+            },
+     'NEW':{
+                "HandTipRight_X":'HandRight_X', 
+                "HandTipRight_Y":'HandRight_Y', 
+                "HandTipRight_Z":'HandRight_Z',
+                "HandTipLeft_X":'HandLeft_X', 
+                "HandTipLeft_Y":'HandLeft_Y', 
+                "HandTipLeft_Z":'HandLeft_Z',   
+            
+               "ThumbRight_X":'HandRight_X', 
+                "ThumbRight_Y":'HandRight_Y', 
+                "ThumbRight_Z":'HandRight_Z',
+                "ThumbLeft_X":'HandLeft_X', 
+                "ThumbLeft_Y":'HandLeft_Y', 
+                "ThumbLeft_Z":'HandLeft_Z',
+                
+               'HandRight_X': 'WristRight_X',
+               'HandRight_Y': 'WristRight_Y',
+               'HandRight_Z': 'WristRight_Z',
+               'HandLeft_X': 'WristLeft_X',
+               'HandLeft_Y': 'WristLeft_Y',
+               'HandLeft_Z': 'WristLeft_Z',
+               
+               'WristRight_X': 'ElbowRight_X',
+               'WristRight_Y': 'ElbowRight_Y',
+               'WristRight_Z': 'ElbowRight_Z',
+               'WristLeft_X': 'ElbowLeft_X',
+               'WristLeft_Y': 'ElbowLeft_Y',
+               'WristLeft_Z': 'ElbowLeft_Z',
+               
+               'ElbowLeft_X': 'ShoulderLeft_X', 
+               'ElbowLeft_Y': 'ShoulderLeft_Y', 
+               'ElbowLeft_Z': 'ShoulderLeft_Z', 
+               'ElbowRight_X': 'ShoulderRight_X',
+               'ElbowRight_Y': 'ShoulderRight_Y',
+               'ElbowRight_Z': 'ShoulderRight_Z',
+               
+               'ShoulderRight_X': 'ShoulderCenter_X',
+               'ShoulderRight_Y': 'ShoulderCenter_Y',
+               'ShoulderRight_Z': 'ShoulderCenter_Z',
+               'ShoulderLeft_X': 'ShoulderCenter_X',
+               'ShoulderLeft_Y': 'ShoulderCenter_Y',
+               'ShoulderLeft_Z': 'ShoulderCenter_Z',
+               
+               'Neck_X': 'ShoulderCenter_X',
+               'Neck_Y': 'ShoulderCenter_Y',
+               'Neck_Z': 'ShoulderCenter_Z',
+               'Neck_X': 'ShoulderCenter_X',
+               'Neck_Y': 'ShoulderCenter_Y',
+               'Neck_Z': 'ShoulderCenter_Z',
+               
+               'Head_X': 'Neck_X',
+               'Head_Y': 'Neck_Y',
+               'Head_Z': 'Neck_Z',
+               'Head_X': 'Neck_X',
+               'Head_Y': 'Neck_Y',
+               'Head_Z': 'Neck_Z',
+               
+               'ShoulderCenter_X': 'SpineMid_X',
+               'ShoulderCenter_Y': 'SpineMid_Y',
+               'ShoulderCenter_Z': 'SpineBasee_Z',
+               
+               'SpineMid_X': 'SpineBase_X',
+               'SpineMid_Y': 'SpineBase_Y',
+               'SpineBasee_Z': 'SpineBasee_Z',
+                
+               'HipRight_X': 'SpineBase_X',
+               'HipRight_Y': 'SpineBase_Y',
+               'HipRight_Z': 'SpineBasee_Z',
+               'HipLeft_X': 'SpineBase_X',
+               'HipLeft_Y': 'SpineBase_Y',
+               'HipLeft_Z': 'SpineBasee_Z',
+               
+               'KneeRight_X': 'HipRight_X',
+               'KneeRight_Y': 'HipRight_Y',
+               'KneeRight_Z': 'HipRight_Z',
+               'KneeLeft_X': 'HipLeft_X',
+               'KneeLeft_Y': 'HipLeft_Y',
+               'KneeLeft_Z': 'HipLeft_Z',
+               
+               'AnkleRight_X': 'KneeRight_X',
+               'AnkleRight_Y': 'KneeRight_Y',
+               'AnkleRight_Z': 'KneeRight_Z',
+               'AnkleLeft_X': 'KneeLeft_X',
+               'AnkleLeft_Y': 'KneeLeft_Y',
+               'AnkleLeft_Z': 'KneeLeft_Z',
+               
+               'FootRight_X': 'AnkleRight_X',
+               'FootRight_Y': 'AnkleRight_Y',
+               'FootRight_Z': 'AnkleRight_Z',
+               'FootLeft_X': 'AnkleLeft_X',
+               'FootLeft_Y': 'AnkleLeft_Y',
+               'FootLeft_Z': 'AnkleLeft_Z'
+            }
+     }
 
 
 

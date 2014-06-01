@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import utils.angleExtraction as ae
 
-f = open('myVicon/Ido dyn 01.csv', 'r')
-#f = open('myVicon/Ran dyn 02.csv', 'r')
+#f = open('myVicon/Ido dyn 01.csv', 'r')
+f = open('myVicon/Ran dyn 03.csv', 'r')
 #f = open('myVicon/Yoni dyn 01.csv', 'r')
 l = []
 i=0
@@ -14,7 +14,7 @@ for line in f:
     i+=1
     if i <=11 :
         continue
-    res = ae.getAngleByColumns(splited, headers, 'Lhip', 'Lknee', 'Lankle')
+    res = ae.getAngleByColumns(splited, headers,'LowBack', 'Lhip', 'Lknee')
     l.append(res)
     #print splited[46]
     #l.append(splited[headers.index('Rankle')])
