@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import periodAnalysisUtils as pu
+
 def partsmovingAverage(parts, window_size=8, factor=1.3):
     cleanParts = []
     for part in parts:
@@ -7,8 +9,10 @@ def partsmovingAverage(parts, window_size=8, factor=1.3):
         cleanParts.append(clean)
     return cleanParts
 
+
+
 def movingAverage(interval, window_size, factor):
-    interval = interval if type(interval) is list else interval.tolist()
+    interval = pu.toList(interval)
     if(window_size %2 == 0):
         window_size += 1
     
@@ -24,7 +28,7 @@ def movingAverage(interval, window_size, factor):
     tail = [np.mean(interval[-window_size:])]*window_size
     conv = np.convolve(head + interval + tail, window, 'same')
     retVal = conv[window_size:-window_size] 
-    return retVal
+    return pu.toList(retVal)
 
 def mse(A, B):
     return ((np.array(A) - np.array(B)) ** 2).mean(axis=0)

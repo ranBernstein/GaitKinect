@@ -4,8 +4,8 @@ import math
 import numpy as np
 import utils.interpulation as inter
 import utils.MovingAverage as ma
-import utils.stitchingLoop as loop
-import utils.animate as an
+import utils.stitching.stitching as loop
+import utils.misc.animate as an
 
 MAXIMAL_FRAMES_GAP = 4
 def removeLowConfedence(time, angles, weights, plot=False):

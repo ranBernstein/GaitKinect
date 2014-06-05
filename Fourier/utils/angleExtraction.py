@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 from math import sqrt, acos
-from jointsMap import ancestorMap
+from utils.kinect.jointsMap import ancestorMap
 from periodAnalysisUtils import binaryByMean, binaryByMedian, deriveTimeSeries, smoothOutliers
 
 import matplotlib.pyplot as plt
@@ -78,12 +78,19 @@ def calcAngle(x1, y1, z1, x2, y2, z2, x3, y3, z3):
 def dis(x1, x2, y1, y2, z1, z2):
     return sqrt((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)
 
-def fromIndex2Point(line, i):
-    return line[i], line[i+1], line[i+2]
+def fromIndex2Vec(line, i):
+    return [line[i], line[i+1], line[i+2]]
  
 def calcDisFromIndices(line, i1, i2):
     return dis(line[i1], line[i2], line[i1+1], line[i2+1], line[i1+2], line[i2+2])
 
+def getVecBetweenJoints(headers, lineInFloats, s1, s2):
+    j1X = headers.index(s1)
+    j2X = headers.index(s2)
+    return [lineInFloats[j1X] - lineInFloats[j2X], \
+             lineInFloats[j1X+1] -lineInFloats[j2X+1], \
+            lineInFloats[j1X+2] -lineInFloats[j2X+2]]
+    
 def calcJointsAverage(line, jointsIndices):
     xSum, ySum, zSum = 0,0,0
     for i in jointsIndices:
@@ -120,6 +127,15 @@ def calcAverageDistanceOfIndicesFromLine(line, jointsIndices,axeIndex1, axeIndex
     for i in jointsIndices:
         sum+= getDisFromAxeByIndecies(line, i, axeIndex1, axeIndex2)
     return sum/len(jointsIndices)
+
+def jointMovementInDirection(line, jointIndex, direction):
+    return np.dot(fromIndex2Vec(line, jointIndex), direction)
+
+def jointsMovementInDirection(line, indices, direction):
+    sum = 0
+    for jointIndex in indices:
+        sum+=jointMovementInDirection(line, jointIndex, direction)
+    return sum/len(indices)
 
 def getAngleFromSplited(headers, splited, jointStr, checkConfedence=True, version='OLD'):
     jointCol = headers.index(jointStr)
@@ -262,23 +278,6 @@ def prepareAngularVelocityFromInput(filePath, i, outputIndex, check, allByTime, 
     plt.show()
     return time, derived
 
-"""  
-featureSpaceIndices = np.array([15, 19, 23, 27, 31, 35, 39, 43, 47, 51, 59, 63, 67, 75, 79, 83])
-fileName = 'inputs/asc_gyro_r.skl'
-allByTime = {}
-f = open(fileName, 'r')
-headers = f.readline().split()
-for line in f:
-    splited = line.split() 
-    timeStamp = int(splited[0])
-    allByTime[timeStamp] = {}
-f.close()
-allByJoint = {}
-
-for inputIndices in featureSpaceIndices:
-    allByJoint[inputIndices] = {} 
-time, res = prepareAngularVelocityFromInput(fileName, 63, 2, True, allByTime, allByJoint)
-"""
 
 
 

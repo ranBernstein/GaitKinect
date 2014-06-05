@@ -1,10 +1,14 @@
 import numpy as np
 import LPF
-import stitchingLoop as sl
+from utils.stitching import stitchingLoop as sl
 from scipy.interpolate import interp1d
 
 def toList(vec):
-    return vec if type(vec) is list else vec.tolist()
+    if type(vec) is tuple:
+        vec = list(vec)
+    else:
+        vec = vec if type(vec) is list else vec.tolist()
+    return vec 
 
 def alignByMaxMany(inputs):
     ret = []
@@ -116,6 +120,9 @@ def dropOutliers(input, time=None):
             tmpTime.append(time[i])
     return tmpInput, tmpTime
 
+def normalizeVector(vec):
+    amplitude = float(max(np.abs(max(vec)), np.abs(min(vec))))
+    return [v/amplitude-np.mean(vec) for v in vec]
 
 
 

@@ -1,10 +1,10 @@
 import numpy as np
-from utils.amcParser import getAMCperiod
+from utils.vicon.amcParser import getAMCperiod
 import matplotlib.pyplot as plt
-import utils.partitionizing as par
+import utils.stitching.stitching.partitionizing as par
 import utils.periodAnalysisUtils as ut
 from cluster import HierarchicalClustering
-from utils.stitching import MAXIMA_ORDER, CLUSTER_COEFF, plotParts
+from utils.stitching.stitching import MAXIMA_ORDER, CLUSTER_COEFF, plotParts
 from scipy.signal import argrelextrema
 """
 file = 'AMCs/598.amc'
