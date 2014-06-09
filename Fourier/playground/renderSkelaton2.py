@@ -12,7 +12,7 @@ from matplotlib import animation
 t_start = 1917 # start frame
 t_end = 2130 # end frame
 
-data = pd.read_csv('inputs/Smart-first_phase_NaN-zeros.csv') # only coordinate data
+data = pd.read_csv('../inputs/Smart-first_phase_NaN-zeros.csv') # only coordinate data
 df = data.loc[t_start:t_end,'Shoulder_left_x':'Ankle_right_z']
 
 # Find max and min values for animation ranges
