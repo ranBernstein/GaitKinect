@@ -172,15 +172,17 @@ ancestorMap = {
                'FootLeft_Z': 'AnkleLeft_Z'
             }
      }
-def getMapAndRootByHeaders(headers):
-    if len(headers) < 90:
+
+def getVersion(headers):
+    if len(headers) < 95:
         version = 'OLD'
     else:
         version = 'NEW'
-    return ancestorMap[version], rootMap[version]
+    return version
+
 
 def getHirarchy(headers):
-    hirarchyMap, _ = getMapAndRootByHeaders(headers)
+    hirarchyMap= ancestorMap[getVersion(headers)]
     joints = getJoints(headers)
     hirarchy = set()
     for joint, parent in hirarchyMap.items():
@@ -190,7 +192,8 @@ def getHirarchy(headers):
     return hirarchy
 
 def getJoints(headers):
-    map, root = getMapAndRootByHeaders(headers)
+    ver = getVersion(headers)
+    map, root = ancestorMap[ver], rootMap[ver]
     s = set()
     s.add(root)
     for header in map.keys():

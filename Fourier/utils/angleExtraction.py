@@ -124,9 +124,15 @@ def getDisFromAxeByIndecies(line, pointIndex, axeIndex1, axeIndex2):
     
 def calcAverageDistanceOfIndicesFromLine(line, jointsIndices,axeIndex1, axeIndex2):
     sum=0
+    num=0.0
     for i in jointsIndices:
-        sum+= getDisFromAxeByIndecies(line, i, axeIndex1, axeIndex2)
-    return sum/len(jointsIndices)
+        try:
+            s=getDisFromAxeByIndecies(line, i, axeIndex1, axeIndex2)
+            sum+=s
+            num+=1
+        except:
+            pass
+    return sum/num
 
 def jointMovementInDirection(line, jointIndex, direction):
     return np.dot(fromIndex2Vec(line, jointIndex), direction)

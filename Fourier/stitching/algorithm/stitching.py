@@ -3,13 +3,13 @@ import matplotlib.pyplot as plt
 import itertools
 import random
 import copy
-import interpulation
+import utils.interpulation as interpulation
 from operator import add, sub
 import math
 from scipy.interpolate import interp1d
-import LPF
-from utils.amcParser import getAMCInput
-import utils.lcss as lcs 
+import utils.LPF as LPF
+from utils.vicon.amcParser import getAMCInput
+#import utils.lcss as lcs 
 EPSILON_FACTOR = 0.15 
 GAP_FACTOR = 0.15
 MEAN_COEFF = 0.13

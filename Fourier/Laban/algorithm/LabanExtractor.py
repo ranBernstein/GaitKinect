@@ -1,8 +1,6 @@
-import utils.angleExtraction as ae
 import matplotlib.pyplot as plt
 import utils.MovingAverage as ma
 import numpy as np
-from scipy.ndimage.filters import maximum_filter
 import utils.spikeDetection as spike
 import utils.periodAnalysisUtils as pu
 
@@ -15,7 +13,10 @@ class LabanExtractor:
         vec = []
         for line in f:
             lineInFloats=[float(v) for v in line.split()]
-            vec.append(huristic(lineInFloats, headers, jointsIndices))
+            try:
+                vec.append(huristic(lineInFloats, headers, jointsIndices))
+            except Exception, e:
+                print e
         return vec
     
     def printConfedence(self, filtered, ranges, positive, negetive):
@@ -65,28 +66,6 @@ class LabanExtractor:
         self.printConfedence(filtered, ranges, positive, negetive)
         plt.show()    
     
-    def expendingCondencingWrapper(self, lineInFloats, headers, jointsIndices):
-        return ae.calcAverageJointDistanceFromCenter(lineInFloats, jointsIndices)
-    
-    def plotExpendingCondencing(self, fileName):
-        input = self.extractLaban(fileName, self.expendingCondencingWrapper)
-        self.plotResults(input, 'Expanding', 'Condensing')
-         
-    def spreadindAndClosingWrapper(self, lineInFloats, headers, jointsIndices):
-        return ae.calcAverageDistanceOfIndicesFromLine(lineInFloats, \
-                        jointsIndices, *self.getLongAxeIndices(headers))
-    
-    def plotSpreadindAndClosing(self, fileName):
-        input = self.extractLaban(fileName, self.spreadindAndClosingWrapper)
-        self.plotResults(input, 'Spreading', 'Closing')
-        
-    def risingAndSinkingWrapper(self, lineInFloats, headers, jointsIndices):
-        return ae.jointsMovementInDirection(lineInFloats, jointsIndices, [0,1,0])
-    
-    def plotRisingAndSinking(self, fileName):
-        input = self.extractLaban(fileName, self.risingAndSinkingWrapper)
-        self.plotResults(input, 'Rising', 'Sinking')
-    
     #def directAndUndirect(self, lineInFloats, headers, jointsIndices):
         #return ae.jointsMovementInDirection(lineInFloats, jointsIndices, [0,1,0])
     
@@ -103,53 +82,19 @@ class LabanExtractor:
             lineInFloats=[float(v) for v in line.split()]
     """
     
-    def plotadvanceAndRetreate(self, fileName):
-        f = open(fileName, 'r')
-        headers = f.readline().split()
-        jointsIndices = self.getJointsIndices(headers)
-        frontDirections = []
-        centers = []
-        for line in f:
-            lineInFloats=[float(v) for v in line.split()]
-            centers.append(ae.calcJointsAverage(lineInFloats, jointsIndices))
-            shouldersVecOnXZPlan = ae.getVecBetweenJoints(headers, lineInFloats,\
-                                   'ShoulderRight_X', 'ShoulderLeft_X')
-            #frontDirections.append([-shouldersVecOnXZPlan[2], 0 , shouldersVecOnXZPlan[0]])
-            frontDirections.append([1,0,0])
-        plt.figure()
-        plt.plot(centers)
-        frontDirections = zip(*ma.partsmovingAverage(zip(*frontDirections), 50, 1))
-        plt.figure()
-        plt.plot(frontDirections)
-        
-        movingDirections = np.diff(centers, axis=0)
-        movingDirections = zip(*ma.partsmovingAverage(zip(*movingDirections), 50, 1))
-        advancements = []
-        for front, move in zip(frontDirections[:-1], movingDirections):
-            if np.abs(front[0])/np.abs(front[2]) > 2:
-                front = [ae.length(front),0,0]
-            product = np.dot(front, move)
-            advancements.append(product)
-        advancements = ma.movingAverage(advancements, 50, 1)
-        advancements = pu.normalizeVector(advancements)
-        clustersByPercentilies = spike.clusterByPercemtile(advancements,1000, 75)
-        clustersByPercentilies = pu.smoothOutliers(clustersByPercentilies)
-        plt.figure()
-        plt.plot(clustersByPercentilies)
-        #advancements = pu.normalizeVector(advancements)
-        plt.plot(advancements)
-        ranges = self.prepareRanges(clustersByPercentilies)
-        self.printConfedence(advancements, ranges, 'Advancing', 'Retreating')
-        plt.show()
-           
-class LabanExtractorKinectV1(LabanExtractor) :
     
+           
     def getJointsIndices(self, headers):
         numOfJoints = (len(headers)-2)/4
         return [2+4*index for index in range(numOfJoints)]
     
+class LabanExtractorKinectV1(LabanExtractor) :
     def getLongAxeIndices(self, headers):
         return headers.index('HipCenter_X'), headers.index('ShoulderCenter_X')
+
+class LabanExtractorKinectV2(LabanExtractor) :
+    def getLongAxeIndices(self, headers):
+        return headers.index('SpineBase_X'), headers.index('ShoulderCenter_X')
         
 #plotExpendingCondencing()
 #plotSpreadindAndClosing()

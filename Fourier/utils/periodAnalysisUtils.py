@@ -1,6 +1,6 @@
 import numpy as np
 import LPF
-from utils.stitching import stitchingLoop as sl
+from stitching.algorithm import stitchingLoop as sl
 from scipy.interpolate import interp1d
 
 def toList(vec):

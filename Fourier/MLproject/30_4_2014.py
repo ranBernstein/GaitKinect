@@ -1,4 +1,4 @@
-from utils.amcParser import getAMCperiod
+from utils.vicon.amcParser import getAMCperiod
 from utils.periodAnalysisUtils import alignByMax
 import matplotlib.pyplot as plt
 import math
@@ -7,7 +7,6 @@ import utils.interpulation as inter
 from scipy import stats
 from sklearn import datasets
 from sklearn.neighbors import KNeighborsClassifier
-from utils.crossValidate import crossValidate
 import copy
 lenVec = 100
 joints = ['rradius', 'lradius', 'rtibia', 'ltibia', 'rwrist', 'lwrist', 'lfoot', 'rfoot', 'lowerback', 'upperback', 'head']
