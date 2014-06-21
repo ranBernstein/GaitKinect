@@ -1,6 +1,6 @@
 import numpy as np
 from operator import sub
-import utils.periodAnalysisUtils as pe
+import utils.utils as pe
 import networkx as nx
 import MovingAverage as ma
 import matplotlib.pyplot as plt

@@ -2,7 +2,6 @@ from  Laban import AbstractLabanAnalyzer, AbstractAnalysis
 import utils.angleExtraction as ae
 import utils.MovingAverage as ma
 import numpy as np
-import utils.periodAnalysisUtils as pu
 
 class AdvanceAndRetreate(AbstractAnalysis.AbstractAnalysis):
     

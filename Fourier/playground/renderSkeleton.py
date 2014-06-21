@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use('TkAgg') # Need to use in order to run on mac
 from matplotlib import pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+#from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.colors import cnames
 from matplotlib import animation
 
@@ -32,7 +32,9 @@ def renderSkeleton(data, **kwargs):
     ax.axis('on')
     
     # choose a different color for each trajectory
-    colors = plt.cm.jet(np.linspace(0, 1, jointsNum))
+    from matplotlib.cm import _generate_cmap
+    cm= _generate_cmap('Spectral', 256)
+    colors = cm(np.linspace(0, 1, jointsNum))
     # set up trajectory lines
     lines = sum([ax.plot([], [], [], '-', c=c) for c in colors], [])
     # set up points

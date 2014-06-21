@@ -2,7 +2,7 @@ import numpy as np
 from utils.vicon.amcParser import getAMCperiod
 import matplotlib.pyplot as plt
 import utils.stitching.stitching.partitionizing as par
-import utils.periodAnalysisUtils as ut
+import utils.utils as ut
 from cluster import HierarchicalClustering
 from utils.stitching.stitching import MAXIMA_ORDER, CLUSTER_COEFF, plotParts
 from scipy.signal import argrelextrema

@@ -28,15 +28,6 @@ class AnalysisEditor(QWidget):
         self.analysisOperationsLayout = self.createOperationsLayout()     
         self.analysisAx = self.analysisFig.add_subplot(1,1,1)
         #self.gridLayout.addLayout(analysisOperationsLayout,1,7)
-        """
-        self.gridLayout = QGridLayout()
-        self.gridLayout.setSpacing(0)
-        self.gridLayout.addWidget(chooseAnalysis,0,0)
-        self.gridLayout.addWidget(self.lineEdit,0,1)
-        self.gridLayout.addWidget(self.analysisCanvas, 1,0,1,2)
-        self.gridLayout.addWidget(toolbar,2,0,1,2)
-        self.gridLayout.addLayout(self.createOperationsLayout(),1,2)
-        """
     
     def initCanvas(self):
         self.lineEdit.clear()
@@ -88,13 +79,13 @@ class AnalysisEditor(QWidget):
         
     def selectAnalysis(self):
         dlg = QFileDialog()
-        dlg.setDirectory('../Laban/analysis')
+        dlg.setDirectory('Laban/analysis')
         analysisFile= unicode(dlg.getOpenFileName(filter='*.py'))
         self.lineEdit.setText(analysisFile)
         if not os.path.isfile(analysisFile):
             return
         rel = os.path.relpath(analysisFile).split('.')[-2]
-        rel = rel.replace('\\','.')[1:]
+        rel = rel.replace('\\','.')#[1:]
         analayzer = importlib.import_module(rel)
         self.analysisVec = analayzer.analyze(self.ui.selectedFile)
         self.original.line = self.plotAnalysis(self.analysisVec)

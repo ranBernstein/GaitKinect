@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import periodAnalysisUtils as pu
+import utils as pu
 
 def partsmovingAverage(parts, window_size=8, factor=1.3):
     cleanParts = []

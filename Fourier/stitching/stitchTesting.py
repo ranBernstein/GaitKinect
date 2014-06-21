@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from utils.vicon.amcParser import getAMCperiod
 from utils.stitching.stitching import MAXIMA_ORDER, CLUSTER_COEFF, plotParts, createParts
 import utils.stitching.stitching as loop
-import utils.periodAnalysisUtils as ut
+import utils.utils as ut
 import utils.MovingAverage as ma
 
 file = 'AMCs/598.amc'

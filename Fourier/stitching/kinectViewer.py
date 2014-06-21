@@ -4,7 +4,7 @@ import utils.oldKinectExtractor as ke
 import algorithm.stitching as st
 import numpy as np
 import algorithm.quantization as qu
-import utils.periodAnalysisUtils as pe
+import utils.utils as pe
 import copy
 import utils.MovingAverage as ma
 import algorithm.partitionizing as prt

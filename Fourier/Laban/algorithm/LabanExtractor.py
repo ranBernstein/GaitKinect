@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import utils.MovingAverage as ma
 import numpy as np
 import utils.spikeDetection as spike
-import utils.periodAnalysisUtils as pu
+import utils.utils as pu
 
 class LabanExtractor:
         
@@ -91,11 +91,14 @@ class LabanExtractor:
 class LabanExtractorKinectV1(LabanExtractor) :
     def getLongAxeIndices(self, headers):
         return headers.index('HipCenter_X'), headers.index('ShoulderCenter_X')
-
+    def getCenterJointIndex(self, headers):
+        return headers.index('HipCenter_X')
+    
 class LabanExtractorKinectV2(LabanExtractor) :
     def getLongAxeIndices(self, headers):
         return headers.index('SpineBase_X'), headers.index('ShoulderCenter_X')
-        
+    def getCenterJointIndex(self, headers):
+        return headers.index('SpineBase_X')   
 #plotExpendingCondencing()
 #plotSpreadindAndClosing()
 #plotRisingAndSinking()

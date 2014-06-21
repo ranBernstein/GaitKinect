@@ -15,15 +15,3 @@ def analyze(inputFile):
     extractor = AbstractLabanAnalyzer.getExtractor(inputFile)
     analysis = ExpendingCondencing(extractor)
     return analysis.extract(inputFile)
-
-"""
-    def expendingCondencingWrapper(self, lineInFloats, headers, jointsIndices):
-        return ae.calcAverageJointDistanceFromCenter(lineInFloats, jointsIndices)
-    
-    def extractExpendingCondencing(self, fileName):
-        return self.extractLaban(fileName, self.expendingCondencingWrapper)
-    
-    def plotExpendingCondencing(self, fileName):
-        input = self.extractLaban(fileName, self.expendingCondencingWrapper)
-        self.plotResults(input, 'Expanding', 'Condensing')
-"""
