@@ -1,7 +1,8 @@
 from  Laban import AbstractLabanAnalyzer, AbstractAnalysis
-import utils.angleExtraction as ae
+import utils.kinect.angleExtraction as ae
 import utils.MovingAverage as ma
 import numpy as np
+import utils.kinect.jointsMap as jm
 
 class AdvanceAndRetreate(AbstractAnalysis.AbstractAnalysis):
     
@@ -14,6 +15,7 @@ class AdvanceAndRetreate(AbstractAnalysis.AbstractAnalysis):
     def extract(self, fileName):
         f = open(fileName, 'r')
         headers = f.readline().split()
+        headers = jm.getFileHeader(headers)
         jointsIndices = self.extractor.getJointsIndices(headers)
         frontDirections = []
         centers = []

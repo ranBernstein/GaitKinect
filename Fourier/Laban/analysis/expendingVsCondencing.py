@@ -1,6 +1,6 @@
 
 from  Laban import AbstractLabanAnalyzer, AbstractAnalysis
-import utils.angleExtraction as ae
+import utils.kinect.angleExtraction as ae
 
 class ExpendingCondencing(AbstractAnalysis.AbstractAnalysis):
     

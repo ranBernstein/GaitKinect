@@ -73,11 +73,11 @@ for s in subjects:
         ds.appendLinked(data ,  subjects.index(s))
 ds.nClasses = len(subjects)
 
-decay= 0.99995
+decay= 0.9999
 myWeightdecay = 0.8
-initialLearningrate= 0.005
+initialLearningrate= 0.001
 hidden_size = 1000
-epochs=1000
+epochs=300
 splitProportion = 0.5
 
 print 'dataset size', len(ds)
@@ -85,16 +85,15 @@ print 'input layer size', len(ds.getSample(0)[0])
 tstdata, trndata = ds.splitWithProportion( splitProportion )
 trndata._convertToOneOfMany( )
 tstdata._convertToOneOfMany( )
-
+"""
 print "Number of training patterns: ", len(trndata)
 print "Input and output dimensions: ", trndata.indim, trndata.outdim
 print "First sample (input, target, class):"
 print trndata['input'][0], trndata['target'][0], trndata['class'][0]
-
+"""
 #for lr in [0.0001]:#20, 40, 80, 160]:
 #for lr in [0.006, 0.003, 0.0015, 0.0007, \
-           #0.0003, 0.0001, 0.00005]: 
- 
+           #0.0003, 0.0001, 0.00005]:  
 inLayer = LinearLayer(len(trndata.getSample(0)[0]))
 hiddenLayer = SigmoidLayer(hidden_size)
 outLayer = LinearLayer(len(trndata.getSample(0)[1]))
@@ -131,12 +130,40 @@ for _ in range(epochs):
     print "epoch: %4d" % trainer.totalepochs, \
       "  train error: %5.2f%%" % trnresult, \
       "  test error: %5.2f%%" % tstresult
+  
+an = FeedForwardNetwork()
+an.addInputModule(inLayer)
+an.addOutputModule(hiddenLayer)
+an.addModule(b)
+an.addConnection(in_to_hidden)
+an.addConnection(b_to_hidden)
+an.sortModules()
+#print len(in_to_hidden
 
+subjects = [2, 5, 6, 7, 8, 12, 16, 35 ,39]
 
+#train
+def createFile(label, ds):
+    out = open(label+'SupervisedOutH_'+str(hidden_size)+'.arff', 'w')
+    out.write('@relation weka.kuku\n\n')
+    for i in range(hidden_size):
+        out.write('@attribute a'+str(i)+ ' numeric\n')
+    st=''
+    for i,s in enumerate(subjects):
+        st+=str(s)
+        if i!= len(subjects)-1:
+            st+=','
+    out.write('@attribute class {'+st+'}\n\n@data\n\n')
+    
+    for input, tag in ds:
+        newInput= an.activate(input)
+        print len(newInput)
+        for v in newInput:
+            out.write(str(v)+',')
+        out.write(str(subjects[tag[0]])+'\n')
 
-
-
-
+createFile('train', trndata)
+createFile('test', tstdata)
 
 
 

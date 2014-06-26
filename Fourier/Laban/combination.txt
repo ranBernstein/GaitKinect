@@ -1,0 +1,66 @@
+
+Passive,  ArmsToUpperBody,  Sink,  Head-drop  s1
+Passive,  ArmsToUpperBody,  Sink  s2
+Passive,  Sink,   Head-drop  s3
+Passive,  ArmsToUpperBody,  Head-drop  s4
+ArmsToUpperBody,  Sink,  Head-drop   s5
+Passive,  ArmsToUpperBody   s6
+Passive,  Sink  s7
+Passive,  Head-drop  s8  
+ArmsToUpperBody,  Sink  s9
+ArmsToUpperBody,  Head-drop  s10
+Sink,  Head-drop  s11
+
+Strong,  Sudden,  Advance,  Direct  a1
+Strong,  Sudden,  Advance   a2
+Strong,  Advance,  Direct  a3
+Strong,  Sudden,  Direct  a4
+Sudden,  Advance,  Direct  a5
+Strong,  Sudden  a6
+Strong,  Advance  a7
+Strong,  Direct   a8  
+Sudden,  Advance  a9
+Sudden,  Direct  a10
+Advance,  Direct  a11 
+
+Retreat,  CondenseEnclose,  Bind,  TwistBack  f1
+Retreat,  CondenseEnclose,  Bind  f2
+Retreat,  Bind,  TwistBack  f3
+Retreat,  CondenseEnclose,   TwistBack   f4
+CondenseEnclose,  Bind,  TwistBack   f5
+Retreat,  CondenseEnclose  f6
+Retreat,  Bind  f7
+Retreat,  TwistBack  f8
+CondenseEnclose,  Bind  f9
+CondenseEnclose,   TwistBack   f10
+Bind,  TwistBack  f11
+
+Jump,  Rhythmicity,  Spread  h1
+Jump,  Rhythmicity,  FreeLight  h2
+Jump,  Rhythmicity,  UpRise  h3
+Jump,  Rhythmicity,  Rotation  h4
+Jump,  Spread,   FreeLight  h5
+Jump,  Spread,   UpRise   h6
+Jump,  Spread,  Rotation  h7
+Jump,  FreeLight,  UpRise  h8
+Jump,  FreeLight,  Rotation  h9
+Jump,  UpRise,  Rotation  h10
+Rhythmicity, Spread,  FreeLight  h11
+Rhythmicity,  FreeLight,  UpRise    h12
+Rhythmicity,  FreeLight,  Rotation  h13
+Rhythmicity, Spread,  UpRise    h14
+Rhythmicity, Spread,  Rotation  h15
+Rhythmicity, UpRise, Rotation  h16
+Spread,  FreeLight,  UpRise    h17
+Spread,  FreeLight,  Rotation  h18
+Spread,  UpRise, Rotation  h19
+FreeLight,  UpRise, Rotation  h20
+
+Side-Open,  Sustained,  Forward  n1
+Indirect,  Sustained,  Weight-shift  n2
+Weight-shift,  forward,  Bend   n3
+Bend,  Side-across,  Forward   n4
+Gesture,   Forward,   Bend  n5
+Gather,   forward,   Gesture  n6
+
+

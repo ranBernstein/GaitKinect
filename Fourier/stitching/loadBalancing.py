@@ -1,5 +1,5 @@
 import utils.oldKinectExtractor as ex
-import utils.angleExtraction as ae
+import utils.kinect.angleExtraction as ae
 import matplotlib.pyplot as plt
 import utils.stitching.stitching as loop
 

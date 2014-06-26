@@ -15,9 +15,7 @@ numOfFeatures = len(joints)*(len(specialOperators) +lenVec)
 subjects = [2, 5, 6, 7, 8, 12, 16, 35 ,39]
 frameSize = math.ceil(np.sqrt(len(subjects)))
 fig = plt.figure()
-joint = 'rtibia'
-plt.xlabel('Time (in frames)')
-plt.ylabel(joint + ' angle')
+
 fig_uniform = plt.figure()
 data = []
 tags = []

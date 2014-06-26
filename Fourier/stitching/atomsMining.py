@@ -1,4 +1,4 @@
-import utils.angleExtraction as ae
+import utils.kinect.angleExtraction as ae
 import utils.stitching.stitching.quantization as qu
 import matplotlib.pyplot as plt
 

@@ -1,5 +1,5 @@
 from  Laban import AbstractLabanAnalyzer, AbstractAnalysis
-import utils.angleExtraction as ae
+import utils.kinect.angleExtraction as ae
 import numpy as np
 
 class LightAndStrong(AbstractAnalysis.AbstractAnalysis):

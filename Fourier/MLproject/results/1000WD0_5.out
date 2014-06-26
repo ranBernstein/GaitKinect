@@ -1,0 +1,628 @@
+dataset size 70
+h:  1000  epochs  1000  initialLearningrate  0.002  decay  0.99995  splitProportion:  0.2  weightdecay  0.5
+Total error: 66.8757677306
+epoch:    1   train error: 82.14%   test error: 64.29%
+Total error: 23.9814157483
+epoch:    2   train error: 85.71%   test error: 85.71%
+Total error: 14.4891953523
+epoch:    3   train error: 78.57%   test error: 85.71%
+Total error: 9.58702003495
+epoch:    4   train error: 83.93%   test error: 92.86%
+Total error: 6.99744942712
+epoch:    5   train error: 91.07%   test error: 85.71%
+Total error: 5.22016064495
+epoch:    6   train error: 82.14%   test error: 78.57%
+Total error: 3.62218271655
+epoch:    7   train error: 85.71%   test error: 78.57%
+Total error: 3.01048559331
+epoch:    8   train error: 82.14%   test error: 78.57%
+Total error: 2.27433993532
+epoch:    9   train error: 82.14%   test error: 85.71%
+Total error: 1.99546460968
+epoch:   10   train error: 75.00%   test error: 92.86%
+Total error: 1.64092762767
+epoch:   11   train error: 69.64%   test error: 92.86%
+Total error: 1.47175085126
+epoch:   12   train error: 71.43%   test error: 85.71%
+Total error: 1.26059190169
+epoch:   13   train error: 69.64%   test error: 92.86%
+Total error: 1.06772274638
+epoch:   14   train error: 76.79%   test error: 92.86%
+Total error: 0.894952796812
+epoch:   15   train error: 78.57%   test error: 85.71%
+Total error: 0.780588444732
+epoch:   16   train error: 71.43%   test error: 85.71%
+Total error: 0.640162869648
+epoch:   17   train error: 67.86%   test error: 85.71%
+Total error: 0.631238127115
+epoch:   18   train error: 82.14%   test error: 85.71%
+Total error: 0.604687497941
+epoch:   19   train error: 71.43%   test error: 78.57%
+Total error: 0.505533037689
+epoch:   20   train error: 51.79%   test error: 92.86%
+Total error: 0.426721040317
+epoch:   21   train error: 51.79%   test error: 85.71%
+Total error: 0.319493568102
+epoch:   22   train error: 75.00%   test error: 71.43%
+Total error: 0.311927003026
+epoch:   23   train error: 58.93%   test error: 85.71%
+Total error: 0.280084997969
+epoch:   24   train error: 58.93%   test error: 85.71%
+Total error: 0.256899261821
+epoch:   25   train error: 50.00%   test error: 78.57%
+Total error: 0.252962016394
+epoch:   26   train error: 48.21%   test error: 78.57%
+Total error: 0.227383956851
+epoch:   27   train error: 57.14%   test error: 71.43%
+Total error: 0.192282842242
+epoch:   28   train error: 50.00%   test error: 85.71%
+Total error: 0.201981313185
+epoch:   29   train error: 44.64%   test error: 71.43%
+Total error: 0.202802598747
+epoch:   30   train error: 33.93%   test error: 64.29%
+Total error: 0.186941553489
+epoch:   31   train error: 53.57%   test error: 64.29%
+Total error: 0.172309189992
+epoch:   32   train error: 64.29%   test error: 71.43%
+Total error: 0.121541407588
+epoch:   33   train error: 42.86%   test error: 78.57%
+Total error: 0.119240848349
+epoch:   34   train error: 41.07%   test error: 64.29%
+Total error: 0.10775264688
+epoch:   35   train error: 39.29%   test error: 71.43%
+Total error: 0.102318382311
+epoch:   36   train error: 28.57%   test error: 50.00%
+Total error: 0.0898018309027
+epoch:   37   train error: 19.64%   test error: 57.14%
+Total error: 0.0858254852249
+epoch:   38   train error: 14.29%   test error: 64.29%
+Total error: 0.0712862240397
+epoch:   39   train error: 12.50%   test error: 64.29%
+Total error: 0.0715828233899
+epoch:   40   train error: 35.71%   test error: 50.00%
+Total error: 0.0780816623374
+epoch:   41   train error: 19.64%   test error: 42.86%
+Total error: 0.0551075614339
+epoch:   42   train error: 23.21%   test error: 64.29%
+Total error: 0.0491892441743
+epoch:   43   train error: 26.79%   test error: 71.43%
+Total error: 0.0480114645531
+epoch:   44   train error: 19.64%   test error: 35.71%
+Total error: 0.0452451333683
+epoch:   45   train error:  3.57%   test error: 42.86%
+Total error: 0.0440503986775
+epoch:   46   train error:  3.57%   test error: 28.57%
+Total error: 0.038577775336
+epoch:   47   train error: 12.50%   test error: 42.86%
+Total error: 0.0342075933312
+epoch:   48   train error: 10.71%   test error: 28.57%
+Total error: 0.0289880983194
+epoch:   49   train error:  3.57%   test error: 28.57%
+Total error: 0.0293964141134
+epoch:   50   train error:  5.36%   test error: 28.57%
+Total error: 0.0240765782043
+epoch:   51   train error:  3.57%   test error: 21.43%
+Total error: 0.0220615082101
+epoch:   52   train error:  0.00%   test error: 14.29%
+Total error: 0.0191105792831
+epoch:   53   train error:  0.00%   test error: 14.29%
+Total error: 0.0224421845932
+epoch:   54   train error:  0.00%   test error: 21.43%
+Total error: 0.0192063172146
+epoch:   55   train error:  0.00%   test error: 21.43%
+Total error: 0.0174376438294
+epoch:   56   train error:  0.00%   test error: 21.43%
+Total error: 0.0163173707199
+epoch:   57   train error:  0.00%   test error: 14.29%
+Total error: 0.0154368965306
+epoch:   58   train error:  0.00%   test error: 21.43%
+Total error: 0.0146024005849
+epoch:   59   train error:  3.57%   test error: 28.57%
+Total error: 0.0130070153072
+epoch:   60   train error:  1.79%   test error: 28.57%
+Total error: 0.0101803315805
+epoch:   61   train error:  1.79%   test error: 14.29%
+Total error: 0.0115814276991
+epoch:   62   train error:  0.00%   test error:  0.00%
+Total error: 0.00949484512776
+epoch:   63   train error:  0.00%   test error:  0.00%
+Total error: 0.00810628220842
+epoch:   64   train error:  0.00%   test error:  0.00%
+Total error: 0.00708370078577
+epoch:   65   train error:  0.00%   test error:  7.14%
+Total error: 0.00711326318128
+epoch:   66   train error:  0.00%   test error:  0.00%
+Total error: 0.00706500844739
+epoch:   67   train error:  0.00%   test error:  0.00%
+Total error: 0.00709689352325
+epoch:   68   train error:  0.00%   test error:  0.00%
+Total error: 0.00729699532235
+epoch:   69   train error:  0.00%   test error:  0.00%
+Total error: 0.00638671696193
+epoch:   70   train error:  0.00%   test error:  0.00%
+Total error: 0.00624850026949
+epoch:   71   train error:  0.00%   test error:  0.00%
+Total error: 0.00688512352976
+epoch:   72   train error:  0.00%   test error:  0.00%
+Total error: 0.00702797275761
+epoch:   73   train error:  3.57%   test error:  0.00%
+Total error: 0.00670488797193
+epoch:   74   train error:  0.00%   test error:  0.00%
+Total error: 0.00662490876457
+epoch:   75   train error:  3.57%   test error: 14.29%
+Total error: 0.00648215663431
+epoch:   76   train error:  1.79%   test error: 14.29%
+Total error: 0.00686662414771
+epoch:   77   train error:  0.00%   test error:  0.00%
+Total error: 0.00596860527983
+epoch:   78   train error:  0.00%   test error:  0.00%
+Total error: 0.00543514078123
+epoch:   79   train error:  0.00%   test error:  0.00%
+Total error: 0.00417375130974
+epoch:   80   train error:  0.00%   test error:  0.00%
+Total error: 0.00473293659942
+epoch:   81   train error:  0.00%   test error:  0.00%
+Total error: 0.00380297012812
+epoch:   82   train error:  0.00%   test error:  0.00%
+Total error: 0.00392848348021
+epoch:   83   train error:  0.00%   test error:  0.00%
+Total error: 0.00335510394837
+epoch:   84   train error:  0.00%   test error:  0.00%
+Total error: 0.00259918033905
+epoch:   85   train error:  0.00%   test error:  0.00%
+Total error: 0.00238574184918
+epoch:   86   train error:  0.00%   test error:  0.00%
+Total error: 0.00260332065205
+epoch:   87   train error:  0.00%   test error:  0.00%
+Total error: 0.00249302061236
+epoch:   88   train error:  0.00%   test error:  0.00%
+Total error: 0.00231689859168
+epoch:   89   train error:  0.00%   test error:  0.00%
+Total error: 0.0023376557327
+epoch:   90   train error:  0.00%   test error:  0.00%
+Total error: 0.0025829999511
+epoch:   91   train error:  0.00%   test error:  0.00%
+Total error: 0.00200242807702
+epoch:   92   train error:  0.00%   test error:  0.00%
+Total error: 0.00219063325759
+epoch:   93   train error:  0.00%   test error:  0.00%
+Total error: 0.00232218695958
+epoch:   94   train error:  0.00%   test error:  0.00%
+Total error: 0.00213138636337
+epoch:   95   train error:  0.00%   test error:  0.00%
+Total error: 0.00186383354224
+epoch:   96   train error:  0.00%   test error:  0.00%
+Total error: 0.00183431240423
+epoch:   97   train error:  0.00%   test error:  0.00%
+Total error: 0.0022656029165
+epoch:   98   train error:  0.00%   test error:  0.00%
+Total error: 0.00224242532176
+epoch:   99   train error:  0.00%   test error:  0.00%
+Total error: 0.00194688014722
+epoch:  100   train error:  0.00%   test error:  0.00%
+Total error: 0.00188850406858
+epoch:  101   train error:  0.00%   test error:  0.00%
+Total error: 0.00193618221773
+epoch:  102   train error:  0.00%   test error:  0.00%
+Total error: 0.00302818590072
+epoch:  103   train error:  0.00%   test error:  0.00%
+Total error: 0.00223133042983
+epoch:  104   train error:  0.00%   test error:  0.00%
+Total error: 0.00154474377975
+epoch:  105   train error:  0.00%   test error:  0.00%
+Total error: 0.00183395678563
+epoch:  106   train error:  0.00%   test error:  0.00%
+Total error: 0.00162909943777
+epoch:  107   train error:  0.00%   test error:  0.00%
+Total error: 0.00155929701868
+epoch:  108   train error:  0.00%   test error:  0.00%
+Total error: 0.0012962546615
+epoch:  109   train error:  0.00%   test error:  0.00%
+Total error: 0.00151771217149
+epoch:  110   train error:  0.00%   test error:  0.00%
+Total error: 0.00183247470053
+epoch:  111   train error:  0.00%   test error:  0.00%
+Total error: 0.00239559722314
+epoch:  112   train error:  0.00%   test error:  7.14%
+Total error: 0.00301310031963
+epoch:  113   train error:  0.00%   test error:  0.00%
+Total error: 0.00214874981443
+epoch:  114   train error:  0.00%   test error:  0.00%
+Total error: 0.00138337885869
+epoch:  115   train error:  0.00%   test error:  0.00%
+Total error: 0.00149010284808
+epoch:  116   train error:  0.00%   test error:  0.00%
+Total error: 0.00132081228173
+epoch:  117   train error:  0.00%   test error:  0.00%
+Total error: 0.00189561886146
+epoch:  118   train error:  0.00%   test error:  0.00%
+Total error: 0.00146201384723
+epoch:  119   train error:  0.00%   test error:  0.00%
+Total error: 0.0014826378452
+epoch:  120   train error:  0.00%   test error:  0.00%
+Total error: 0.00466041499478
+epoch:  121   train error:  0.00%   test error:  0.00%
+Total error: 0.00197076041834
+epoch:  122   train error:  0.00%   test error:  0.00%
+Total error: 0.00153253379776
+epoch:  123   train error:  0.00%   test error:  0.00%
+Total error: 0.00231767558288
+epoch:  124   train error:  0.00%   test error:  0.00%
+Total error: 0.00153066314356
+epoch:  125   train error:  0.00%   test error:  0.00%
+Total error: 0.00149764279362
+epoch:  126   train error:  0.00%   test error:  0.00%
+Total error: 0.00144316112683
+epoch:  127   train error:  0.00%   test error:  0.00%
+Total error: 0.00147934337539
+epoch:  128   train error:  0.00%   test error:  0.00%
+Total error: 0.00188704375431
+epoch:  129   train error:  0.00%   test error:  0.00%
+Total error: 0.00155306209983
+epoch:  130   train error:  0.00%   test error:  0.00%
+Total error: 0.00117362648314
+epoch:  131   train error:  0.00%   test error:  0.00%
+Total error: 0.00138089890181
+epoch:  132   train error:  0.00%   test error:  0.00%
+Total error: 0.00157040974149
+epoch:  133   train error:  0.00%   test error:  0.00%
+Total error: 0.00163362870627
+epoch:  134   train error:  0.00%   test error:  0.00%
+Total error: 0.00106969806445
+epoch:  135   train error:  0.00%   test error:  0.00%
+Total error: 0.00170525787883
+epoch:  136   train error:  0.00%   test error:  0.00%
+Total error: 0.00302025781854
+epoch:  137   train error:  0.00%   test error:  0.00%
+Total error: 0.00979757710515
+epoch:  138   train error:  0.00%   test error: 14.29%
+Total error: 0.0103694275675
+epoch:  139   train error:  0.00%   test error:  0.00%
+Total error: 0.00552644179101
+epoch:  140   train error:  0.00%   test error:  0.00%
+Total error: 0.00686460746099
+epoch:  141   train error:  0.00%   test error:  0.00%
+Total error: 0.00135537855247
+epoch:  142   train error:  0.00%   test error:  0.00%
+Total error: 0.001289920662
+epoch:  143   train error:  0.00%   test error:  0.00%
+Total error: 0.00113988016389
+epoch:  144   train error:  0.00%   test error:  0.00%
+Total error: 0.00127086082303
+epoch:  145   train error:  0.00%   test error:  0.00%
+Total error: 0.00116963190321
+epoch:  146   train error:  0.00%   test error:  0.00%
+Total error: 0.00105740362823
+epoch:  147   train error:  0.00%   test error:  0.00%
+Total error: 0.00109756308551
+epoch:  148   train error:  0.00%   test error:  0.00%
+Total error: 0.000988354362344
+epoch:  149   train error:  0.00%   test error:  0.00%
+Total error: 0.000994335255155
+epoch:  150   train error:  0.00%   test error:  0.00%
+Total error: 0.00102120948153
+epoch:  151   train error:  0.00%   test error:  0.00%
+Total error: 0.00168242142676
+epoch:  152   train error:  0.00%   test error:  0.00%
+Total error: 0.00128934409091
+epoch:  153   train error:  0.00%   test error:  0.00%
+Total error: 0.0010644587931
+epoch:  154   train error:  0.00%   test error:  0.00%
+Total error: 0.00146914682563
+epoch:  155   train error:  0.00%   test error:  0.00%
+Total error: 0.00124242332686
+epoch:  156   train error:  0.00%   test error:  0.00%
+Total error: 0.0011131608499
+epoch:  157   train error:  0.00%   test error:  0.00%
+Total error: 0.0012338337499
+epoch:  158   train error:  0.00%   test error:  0.00%
+Total error: 0.0010646135853
+epoch:  159   train error:  0.00%   test error:  0.00%
+Total error: 0.00118246108048
+epoch:  160   train error:  0.00%   test error:  0.00%
+Total error: 0.00194457621704
+epoch:  161   train error:  0.00%   test error:  0.00%
+Total error: 0.00120250261767
+epoch:  162   train error:  0.00%   test error:  0.00%
+Total error: 0.00153649887411
+epoch:  163   train error:  0.00%   test error:  0.00%
+Total error: 0.00107887769686
+epoch:  164   train error:  0.00%   test error:  0.00%
+Total error: 0.00123680709137
+epoch:  165   train error:  0.00%   test error:  0.00%
+Total error: 0.00124162905175
+epoch:  166   train error:  0.00%   test error:  0.00%
+Total error: 0.00114855118175
+epoch:  167   train error:  0.00%   test error:  0.00%
+Total error: 0.00110961726665
+epoch:  168   train error:  0.00%   test error:  0.00%
+Total error: 0.0010475810727
+epoch:  169   train error:  0.00%   test error:  0.00%
+Total error: 0.00174874643002
+epoch:  170   train error:  0.00%   test error:  0.00%
+Total error: 0.00114073914877
+epoch:  171   train error:  0.00%   test error:  0.00%
+Total error: 0.00120524712098
+epoch:  172   train error:  0.00%   test error:  0.00%
+Total error: 0.00145360927201
+epoch:  173   train error:  0.00%   test error:  0.00%
+Total error: 0.000990702479842
+epoch:  174   train error:  0.00%   test error:  0.00%
+Total error: 0.00105619097865
+epoch:  175   train error:  0.00%   test error:  0.00%
+Total error: 0.000951689940659
+epoch:  176   train error:  0.00%   test error:  0.00%
+Total error: 0.00101860886876
+epoch:  177   train error:  0.00%   test error:  0.00%
+Total error: 0.00157905260989
+epoch:  178   train error: 16.07%   test error: 21.43%
+Total error: 0.00159373362618
+epoch:  179   train error:  0.00%   test error:  0.00%
+Total error: 0.00110645173496
+epoch:  180   train error:  0.00%   test error:  0.00%
+Total error: 0.000970944542571
+epoch:  181   train error:  0.00%   test error:  0.00%
+Total error: 0.00128308478956
+epoch:  182   train error:  0.00%   test error:  0.00%
+Total error: 0.00620504992318
+epoch:  183   train error:  0.00%   test error:  0.00%
+Total error: 0.0042539311873
+epoch:  184   train error:  3.57%   test error:  0.00%
+Total error: 0.00261964933773
+epoch:  185   train error:  0.00%   test error:  0.00%
+Total error: 0.0013892521919
+epoch:  186   train error:  0.00%   test error:  0.00%
+Total error: 0.00101461165195
+epoch:  187   train error:  0.00%   test error:  0.00%
+Total error: 0.000959225854703
+epoch:  188   train error:  0.00%   test error:  0.00%
+Total error: 0.00100845001724
+epoch:  189   train error:  0.00%   test error:  0.00%
+Total error: 0.00106266291945
+epoch:  190   train error:  0.00%   test error:  0.00%
+Total error: 0.000932089710224
+epoch:  191   train error:  0.00%   test error:  0.00%
+Total error: 0.000751088928149
+epoch:  192   train error:  0.00%   test error:  0.00%
+Total error: 0.00108464469906
+epoch:  193   train error:  0.00%   test error:  0.00%
+Total error: 0.000913298050668
+epoch:  194   train error:  0.00%   test error:  0.00%
+Total error: 0.000922624081435
+epoch:  195   train error:  0.00%   test error:  0.00%
+Total error: 0.00101968043852
+epoch:  196   train error:  0.00%   test error:  0.00%
+Total error: 0.000830080526234
+epoch:  197   train error:  0.00%   test error:  0.00%
+Total error: 0.00125362312358
+epoch:  198   train error:  0.00%   test error:  0.00%
+Total error: 0.000908080955962
+epoch:  199   train error:  0.00%   test error:  0.00%
+Total error: 0.00114772312271
+epoch:  200   train error:  0.00%   test error:  0.00%
+Total error: 0.00102254830906
+epoch:  201   train error:  0.00%   test error:  0.00%
+Total error: 0.0011149530732
+epoch:  202   train error:  0.00%   test error:  0.00%
+Total error: 0.000967642389679
+epoch:  203   train error:  0.00%   test error:  0.00%
+Total error: 0.000996744598078
+epoch:  204   train error:  0.00%   test error:  0.00%
+Total error: 0.0010104080673
+epoch:  205   train error:  0.00%   test error:  0.00%
+Total error: 0.000963729499706
+epoch:  206   train error:  0.00%   test error:  0.00%
+Total error: 0.00095944297856
+epoch:  207   train error:  0.00%   test error:  0.00%
+Total error: 0.00117031618965
+epoch:  208   train error:  0.00%   test error:  0.00%
+Total error: 0.00143415624513
+epoch:  209   train error:  0.00%   test error:  0.00%
+Total error: 0.000842910391391
+epoch:  210   train error:  0.00%   test error:  0.00%
+Total error: 0.000934394265055
+epoch:  211   train error:  0.00%   test error:  0.00%
+Total error: 0.00116655966007
+epoch:  212   train error:  0.00%   test error:  0.00%
+Total error: 0.000955050720939
+epoch:  213   train error:  0.00%   test error:  0.00%
+Total error: 0.00101744285282
+epoch:  214   train error:  0.00%   test error:  0.00%
+Total error: 0.000817891356304
+epoch:  215   train error:  0.00%   test error:  0.00%
+Total error: 0.00109599833094
+epoch:  216   train error:  0.00%   test error:  0.00%
+Total error: 0.00094957967244
+epoch:  217   train error:  0.00%   test error:  0.00%
+Total error: 0.00116916658479
+epoch:  218   train error:  0.00%   test error:  0.00%
+Total error: 0.000979930073227
+epoch:  219   train error:  0.00%   test error:  0.00%
+Total error: 0.000938673352704
+epoch:  220   train error:  0.00%   test error:  0.00%
+Total error: 0.000751106504386
+epoch:  221   train error:  0.00%   test error:  0.00%
+Total error: 0.00110487383976
+epoch:  222   train error:  0.00%   test error:  0.00%
+Total error: 0.000948798548869
+epoch:  223   train error:  0.00%   test error:  0.00%
+Total error: 0.00115874206196
+epoch:  224   train error:  0.00%   test error:  0.00%
+Total error: 0.000977543731969
+epoch:  225   train error:  0.00%   test error:  0.00%
+Total error: 0.00107868346407
+epoch:  226   train error:  0.00%   test error:  0.00%
+Total error: 0.000918847331103
+epoch:  227   train error:  0.00%   test error:  0.00%
+Total error: 0.000889345206239
+epoch:  228   train error:  0.00%   test error:  0.00%
+Total error: 0.00108690808144
+epoch:  229   train error:  0.00%   test error:  0.00%
+Total error: 0.00101031415836
+epoch:  230   train error:  0.00%   test error:  0.00%
+Total error: 0.000988770491287
+epoch:  231   train error:  0.00%   test error:  0.00%
+Total error: 0.00102196944408
+epoch:  232   train error:  0.00%   test error:  0.00%
+Total error: 0.00108342307207
+epoch:  233   train error:  0.00%   test error:  0.00%
+Total error: 0.000868493802734
+epoch:  234   train error:  0.00%   test error:  0.00%
+Total error: 0.000939107004895
+epoch:  235   train error:  0.00%   test error:  0.00%
+Total error: 0.000884860592477
+epoch:  236   train error:  0.00%   test error:  0.00%
+Total error: 0.00101451472086
+epoch:  237   train error:  0.00%   test error:  0.00%
+Total error: 0.00084791910337
+epoch:  238   train error:  0.00%   test error:  0.00%
+Total error: 0.000771286141056
+epoch:  239   train error:  0.00%   test error:  0.00%
+Total error: 0.00087407697764
+epoch:  240   train error:  0.00%   test error:  0.00%
+Total error: 0.00113892295018
+epoch:  241   train error:  0.00%   test error:  0.00%
+Total error: 0.000859122768595
+epoch:  242   train error:  0.00%   test error:  0.00%
+Total error: 0.00109911701018
+epoch:  243   train error:  0.00%   test error:  0.00%
+Total error: 0.000915141816156
+epoch:  244   train error:  0.00%   test error:  0.00%
+Total error: 0.00097441870651
+epoch:  245   train error:  0.00%   test error:  0.00%
+Total error: 0.00100683909732
+epoch:  246   train error:  0.00%   test error:  0.00%
+Total error: 0.000901406455246
+epoch:  247   train error:  0.00%   test error:  0.00%
+Total error: 0.00127607753848
+epoch:  248   train error:  0.00%   test error:  0.00%
+Total error: 0.000930166246037
+epoch:  249   train error:  0.00%   test error:  0.00%
+Total error: 0.000816319619316
+epoch:  250   train error:  0.00%   test error:  0.00%
+Total error: 0.000994204484035
+epoch:  251   train error:  0.00%   test error:  0.00%
+Total error: 0.000875499144028
+epoch:  252   train error:  0.00%   test error:  0.00%
+Total error: 0.000832540052764
+epoch:  253   train error:  0.00%   test error:  0.00%
+Total error: 0.00100091483522
+epoch:  254   train error:  0.00%   test error:  0.00%
+Total error: 0.000959782026535
+epoch:  255   train error:  0.00%   test error:  0.00%
+Total error: 0.000914501623422
+epoch:  256   train error:  0.00%   test error:  0.00%
+Total error: 0.000882431643343
+epoch:  257   train error:  0.00%   test error:  0.00%
+Total error: 0.000900076899741
+epoch:  258   train error:  0.00%   test error:  0.00%
+Total error: 0.00115853860973
+epoch:  259   train error:  0.00%   test error:  0.00%
+Total error: 0.000853340964601
+epoch:  260   train error:  0.00%   test error:  0.00%
+Total error: 0.000890151417856
+epoch:  261   train error:  0.00%   test error:  0.00%
+Total error: 0.000883301527357
+epoch:  262   train error:  0.00%   test error:  0.00%
+Total error: 0.000978251087192
+epoch:  263   train error:  0.00%   test error:  0.00%
+Total error: 0.000919214856283
+epoch:  264   train error:  0.00%   test error:  0.00%
+Total error: 0.000817015028446
+epoch:  265   train error:  0.00%   test error:  0.00%
+Total error: 0.00085048891847
+epoch:  266   train error:  0.00%   test error:  0.00%
+Total error: 0.000781732668857
+epoch:  267   train error:  0.00%   test error:  0.00%
+Total error: 0.000911518033132
+epoch:  268   train error:  0.00%   test error:  0.00%
+Total error: 0.000812088580717
+epoch:  269   train error:  0.00%   test error:  0.00%
+Total error: 0.000884237350682
+epoch:  270   train error:  0.00%   test error:  0.00%
+Total error: 0.000836167352462
+epoch:  271   train error:  0.00%   test error:  0.00%
+Total error: 0.00093777134408
+epoch:  272   train error:  0.00%   test error:  0.00%
+Total error: 0.000750652882812
+epoch:  273   train error:  0.00%   test error:  0.00%
+Total error: 0.000875844530497
+epoch:  274   train error:  0.00%   test error:  0.00%
+Total error: 0.000806363471374
+epoch:  275   train error:  0.00%   test error:  0.00%
+Total error: 0.000828102284333
+epoch:  276   train error:  0.00%   test error:  0.00%
+Total error: 0.000959333237149
+epoch:  277   train error:  0.00%   test error:  0.00%
+Total error: 0.000855170830787
+epoch:  278   train error:  0.00%   test error:  0.00%
+Total error: 0.000892462739621
+epoch:  279   train error:  0.00%   test error:  0.00%
+Total error: 0.000815177499826
+epoch:  280   train error:  0.00%   test error:  0.00%
+Total error: 0.000877435030905
+epoch:  281   train error:  0.00%   test error:  0.00%
+Total error: 0.00109131758967
+epoch:  282   train error:  0.00%   test error:  0.00%
+Total error: 0.000834758148651
+epoch:  283   train error:  0.00%   test error:  0.00%
+Total error: 0.000928853518476
+epoch:  284   train error:  0.00%   test error:  0.00%
+Total error: 0.00102354220287
+epoch:  285   train error:  0.00%   test error:  0.00%
+Total error: 0.000987671498397
+epoch:  286   train error:  0.00%   test error:  0.00%
+Total error: 0.000808250651707
+epoch:  287   train error:  0.00%   test error:  0.00%
+Total error: 0.000798804528427
+epoch:  288   train error:  0.00%   test error:  0.00%
+Total error: 0.000775158860128
+epoch:  289   train error:  0.00%   test error:  0.00%
+Total error: 0.000849577241268
+epoch:  290   train error:  0.00%   test error:  0.00%
+Total error: 0.000853227209736
+epoch:  291   train error:  0.00%   test error:  0.00%
+Total error: 0.000960033926811
+epoch:  292   train error:  0.00%   test error:  0.00%
+Total error: 0.000798279714405
+epoch:  293   train error:  0.00%   test error:  0.00%
+Total error: 0.000947223529873
+epoch:  294   train error:  0.00%   test error:  0.00%
+Total error: 0.00073517872771
+epoch:  295   train error:  0.00%   test error:  0.00%
+Total error: 0.000793065523717
+epoch:  296   train error:  0.00%   test error:  0.00%
+Total error: 0.000942485886728
+epoch:  297   train error:  0.00%   test error:  0.00%
+Total error: 0.000962555622394
+epoch:  298   train error:  0.00%   test error:  0.00%
+Total error: 0.000810535722831
+epoch:  299   train error:  0.00%   test error:  0.00%
+Total error: 0.00078679495788
+epoch:  300   train error:  0.00%   test error:  0.00%
+Total error: 0.000703101991897
+epoch:  301   train error:  0.00%   test error:  0.00%
+Total error: 0.000855566598022
+epoch:  302   train error:  0.00%   test error:  0.00%
+Total error: 0.000853641827864
+epoch:  303   train error:  0.00%   test error:  0.00%
+Total error: 0.000807989589299
+epoch:  304   train error:  0.00%   test error:  0.00%
+Total error: 0.000968182004394
+epoch:  305   train error:  0.00%   test error:  0.00%
+Total error: 0.000839336338567
+epoch:  306   train error:  0.00%   test error:  0.00%
+Total error: 0.000806981264131
+epoch:  307   train error:  0.00%   test error:  0.00%
+Total error: 0.00067626451102
+epoch:  308   train error:  0.00%   test error:  0.00%
+Total error: 0.000790768279846
+epoch:  309   train error:  0.00%   test error:  0.00%
+Total error: 0.00101801051569
+epoch:  310   train error:  0.00%   test error:  0.00%
+Total error: 0.000812754751822
+epoch:  311   train error:  0.00%   test error:  0.00%
+Total error: 0.000778234169442
+epoch:  312   train error:  0.00%   test error:  0.00%
+Total error: 0.000786161384575
+epoch:  313   train error:  0.00%   test error:  0.00%

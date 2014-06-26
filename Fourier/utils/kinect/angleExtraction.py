@@ -1,11 +1,8 @@
 import numpy as np
 import sys
 from math import sqrt, acos
-import kinect.jointsMap as jm
-from utils import binaryByMean, binaryByMedian, deriveTimeSeries, smoothOutliers
-
-import matplotlib.pyplot as plt
-
+import jointsMap as jm
+from utils.utils import binaryByMedian, deriveTimeSeries, smoothOutliers
 
 
 def getAnccestorRelativePos(splited, isRelative, chosenIndices):
@@ -132,6 +129,7 @@ def getAngleByColumns(splited, headers, fatherStr, midStr, childStr):
 def getAngleVec(filePath, jointStr, checkConfedence=True, version='OLD'):
     f = open(filePath, 'r')
     headers = f.readline().split()
+    headers = jm.getFileHeader(headers)
     time = []
     frameNumbers = []
     angles = []
@@ -141,7 +139,8 @@ def getAngleVec(filePath, jointStr, checkConfedence=True, version='OLD'):
         timeStamp = int(splited[headers.index('timestamp')])
         frameNum = int(splited[headers.index('framenum')])
         splited = np.array(splited)
-        retVal = getAngleFromSplited(headers, splited, jointStr, checkConfedence, version)
+        retVal = getAngleFromSplited(headers, splited, jointStr, \
+                                     checkConfedence, version)
         if(retVal is None):
             continue
         weight = None
@@ -157,67 +156,6 @@ def getAngleVec(filePath, jointStr, checkConfedence=True, version='OLD'):
     retVal = (time, frameNumbers, angles) if checkConfedence else \
         (time, frameNumbers, angles, weights)
     return retVal
-
-def prepareAnglesFromInput(filePath, i, outputIndex, check, allByTime, allByJoint):
-    f = open(filePath, 'r')
-    headers = f.readline().split()
-    output = []
-    time = [] 
-    for line in f:
-        splited = line.split() 
-        timeStamp = int(splited[0])
-        splited = np.array(splited)
-        output = float(splited[outputIndex])
-        if(output == 0):
-            continue
-        allByTime[timeStamp]['output'] = output
-        try:
-            x = float(splited[i])
-            y = float(splited[i+1])
-            z = float(splited[i+2])
-            tracked = int(splited[i+3])
-            fatherIndex_x = jm.ancestorMap[i]
-            father_x = float(splited[fatherIndex_x])
-            father_y = float(splited[fatherIndex_x+1])
-            father_z = float(splited[fatherIndex_x+2])
-            father_tracked = int(splited[fatherIndex_x+3])
-            grandFatherIndex_x =  jm.ancestorMap[fatherIndex_x]
-            grandFather_x = float(splited[grandFatherIndex_x])
-            grandFather_y = float(splited[grandFatherIndex_x+1])
-            grandFather_z = float(splited[grandFatherIndex_x+2])
-            grandFather_tracked = int(splited[grandFatherIndex_x+3])
-            if(check and (tracked != 2 or father_tracked != 2 or grandFather_tracked != 2)):
-            #if(check and (tracked == 0 or father_tracked == 0 or grandFather_tracked == 0)):
-                raise '0 value feature'                     
-            angle = calcAngle(x, y, z, father_x,father_y,father_z, grandFather_x,grandFather_y,grandFather_z)
-        except:
-            continue
-        allByTime[timeStamp][i] = angle
-        allByJoint[i][timeStamp] = angle
-    f.close()
-    
-    return allByTime, allByJoint
-
-def prepareAngularVelocityFromInput(filePath, i, outputIndex, check, allByTime, allByJoint):
-    allByTime, allByJoint = prepareAnglesFromInput(filePath, i, outputIndex, True, allByTime, allByJoint)
-    time = allByJoint[i].keys()
-    time.sort()
-    values = []
-    tmpTime = []
-    for t in time:
-        values.append(allByJoint[i][t])
-        tmpTime.append(t)
-    time = tmpTime
-    plt.plot(time,values)
-    values = binaryByMedian(values)
-    values = smoothOutliers(values)
-    plt.plot(time,values)
-    time, derived = deriveTimeSeries(time, values)
-    binaryDerived = binaryByMedian(derived)
-            
-    #plt.plot(time,binaryDerived)
-    plt.show()
-    return time, derived
 
 def fromFileToFloats(fileName):
     f = open(fileName, 'r')
@@ -304,10 +242,69 @@ def subCenterFromDataForIndecies(data, centerXIndex, jointsIndices):
     return newData
     
     
+"""
+DEPRECATED   
+def prepareAnglesFromInput(filePath, i, outputIndex, check, allByTime, allByJoint):
+    f = open(filePath, 'r')
+    headers = f.readline().split()
+    output = []
+    time = [] 
+    for line in f:
+        splited = line.split() 
+        timeStamp = int(splited[0])
+        splited = np.array(splited)
+        output = float(splited[outputIndex])
+        if(output == 0):
+            continue
+        allByTime[timeStamp]['output'] = output
+        try:
+            x = float(splited[i])
+            y = float(splited[i+1])
+            z = float(splited[i+2])
+            tracked = int(splited[i+3])
+            fatherIndex_x = jm.ancestorMap[i]
+            father_x = float(splited[fatherIndex_x])
+            father_y = float(splited[fatherIndex_x+1])
+            father_z = float(splited[fatherIndex_x+2])
+            father_tracked = int(splited[fatherIndex_x+3])
+            grandFatherIndex_x =  jm.ancestorMap[fatherIndex_x]
+            grandFather_x = float(splited[grandFatherIndex_x])
+            grandFather_y = float(splited[grandFatherIndex_x+1])
+            grandFather_z = float(splited[grandFatherIndex_x+2])
+            grandFather_tracked = int(splited[grandFatherIndex_x+3])
+            if(check and (tracked != 2 or father_tracked != 2 or grandFather_tracked != 2)):
+            #if(check and (tracked == 0 or father_tracked == 0 or grandFather_tracked == 0)):
+                raise '0 value feature'                     
+            angle = calcAngle(x, y, z, father_x,father_y,father_z, grandFather_x,grandFather_y,grandFather_z)
+        except:
+            continue
+        allByTime[timeStamp][i] = angle
+        allByJoint[i][timeStamp] = angle
+    f.close()
     
+    return allByTime, allByJoint   
     
-    
-    
+def prepareAngularVelocityFromInput(filePath, i, outputIndex, check, allByTime, allByJoint):
+    allByTime, allByJoint = prepareAnglesFromInput(filePath, i, outputIndex, True, allByTime, allByJoint)
+    time = allByJoint[i].keys()
+    time.sort()
+    values = []
+    tmpTime = []
+    for t in time:
+        values.append(allByJoint[i][t])
+        tmpTime.append(t)
+    time = tmpTime
+    plt.plot(time,values)
+    values = binaryByMedian(values)
+    values = smoothOutliers(values)
+    plt.plot(time,values)
+    time, derived = deriveTimeSeries(time, values)
+    binaryDerived = binaryByMedian(derived)
+            
+    #plt.plot(time,binaryDerived)
+    plt.show()
+    return time, derived 
+"""  
     
     
     

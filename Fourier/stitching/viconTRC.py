@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import utils.angleExtraction as ae
+import utils.kinect.angleExtraction as ae
 import algorithm.stitching as st
 import numpy as np
 import algorithm.partitionizing as part

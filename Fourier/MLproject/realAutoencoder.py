@@ -61,6 +61,7 @@ def getData(fileName, vecSize):
 vecSize =  100
 subjects = [2, 5, 6, 7, 8, 12, 16, 35 ,39]
 ds = None
+dsForFiles = {} 
 for s in subjects:
     for cycleNum in range(1, 13):
         fileName = '../inputs/Vicon from CMU/subjects/'+str(s)+'/'+str(cycleNum)+'.amc'
@@ -69,35 +70,35 @@ for s in subjects:
         except IOError:
             continue
         if ds is None:#initialization
-            ds = ClassificationDataSet( len(data), 1 )
-        ds.appendLinked(data ,  subjects.index(s))
-ds.nClasses = len(subjects)
-
-decay= 0.99995
+            ds = ClassificationDataSet( len(data), len(data) )
+        dsForFiles[str(data)] = s
+        ds.appendLinked(data ,  data)
+ds.nClasses = len(data)
+decay= 0.9999
 myWeightdecay = 0.8
-initialLearningrate= 0.005
-hidden_size = 1000
-epochs=1000
+initialLearningrate= 0.00025
+hidden_size = 500
+epochs=40
 splitProportion = 0.5
+description ='AutoEncoder convergence, hidden layer size: '+str(hidden_size) 
 
 print 'dataset size', len(ds)
 print 'input layer size', len(ds.getSample(0)[0])
 tstdata, trndata = ds.splitWithProportion( splitProportion )
-trndata._convertToOneOfMany( )
-tstdata._convertToOneOfMany( )
-
+#trndata._convertToOneOfMany( )
+#tstdata._convertToOneOfMany( )
+"""
 print "Number of training patterns: ", len(trndata)
 print "Input and output dimensions: ", trndata.indim, trndata.outdim
 print "First sample (input, target, class):"
 print trndata['input'][0], trndata['target'][0], trndata['class'][0]
-
+"""
 #for lr in [0.0001]:#20, 40, 80, 160]:
 #for lr in [0.006, 0.003, 0.0015, 0.0007, \
-           #0.0003, 0.0001, 0.00005]: 
- 
+           #0.0003, 0.0001, 0.00005]:  
 inLayer = LinearLayer(len(trndata.getSample(0)[0]))
 hiddenLayer = SigmoidLayer(hidden_size)
-outLayer = LinearLayer(len(trndata.getSample(0)[1]))
+outLayer = LinearLayer(len(trndata.getSample(0)[0]))
 n = FeedForwardNetwork()
 n.addInputModule(inLayer)
 n.addModule(hiddenLayer)
@@ -121,19 +122,63 @@ trainer = BackpropTrainer(n, trndata,  learningrate=initialLearningrate,\
 print 'h: ', hidden_size, ' epochs ', epochs, ' initialLearningrate ', \
     initialLearningrate, ' decay ', decay, ' splitProportion: ', \
     str(splitProportion), ' weightdecay ', str(myWeightdecay)
+def printError(ds, label):
+    sum = 0
+    for input, output in ds:
+        pred = n.activate(input)
+        sum+= np.sqrt(np.sum(np.square(output - pred)))/np.sqrt(np.sum(np.square(output)))
+    #print input, pred
+    mrmse = sum/len(ds)
+    print label, 'MRMSE: ', mrmse
+    return mrmse
+trnresults=[]
+tstresults=[]
 for _ in range(epochs):
     trainer.trainEpochs(1)
-    trnresult = percentError( trainer.testOnClassData(),
-                                  trndata['class'] )
-    tstresult = percentError( trainer.testOnClassData(
-           dataset=tstdata ), tstdata['class'] )
+    trnresults.append(printError(trndata, 'train'))
+    tstresults.append(printError(tstdata, 'test'))
+  
+an = FeedForwardNetwork()
+an.addInputModule(inLayer)
+an.addOutputModule(hiddenLayer)
+an.addModule(b)
+an.addConnection(in_to_hidden)
+an.addConnection(b_to_hidden)
+an.sortModules()
+#print len(in_to_hidden
+
+subjects = [2, 5, 6, 7, 8, 12, 16, 35 ,39]
+
+#train
+def createFile(label, ds):
+    out = open(label+'RealOutH_'+str(hidden_size)+'.arff', 'w')
+    out.write('@relation weka.kuku\n\n')
+    for i in range(hidden_size):
+        out.write('@attribute a'+str(i)+ ' numeric\n')
+    st=''
+    for i,s in enumerate(subjects):
+        st+=str(s)
+        if i!= len(subjects)-1:
+            st+=','
+    out.write('@attribute class {'+st+'}\n\n@data\n\n')
     
-    print "epoch: %4d" % trainer.totalepochs, \
-      "  train error: %5.2f%%" % trnresult, \
-      "  test error: %5.2f%%" % tstresult
+    for input, tag in ds:
+        newInput= an.activate(input)
+        for v in newInput:
+            out.write(str(v)+',')
+        out.write(str(dsForFiles[str(data)])+'\n')
+
+createFile('train', trndata)
+createFile('test', tstdata)
+plt.plot(trnresults, label='Train error ')
+plt.plot(tstresults, label='Test error ')
+plt.title(description)
+plt.xlabel('epoches')
+plt.ylabel('error')
+plt.legend().draggable()
 
 
-
+plt.show()
 
 
 
