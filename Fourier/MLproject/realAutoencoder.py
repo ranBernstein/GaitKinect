@@ -41,21 +41,7 @@ def getData(fileName, vecSize):
     for joint,vecs in map.items():
         for vec in vecs:
             _, uniformlySampled = inter.getUniformSampled(range(len(vec)), vec, vecSize)
-            """
-            maxV = np.max(uniformlySampled)
-            minV = np.min(uniformlySampled)
-            amp = maxV -minV
-            if amp==0:
-                print 'zeroi input'
-            else:
-                uniformlySampled = [2*v/amp -1 for v in uniformlySampled]
-            """
             ret = ret + uniformlySampled.tolist()
-    """      
-    ret = []
-    for i in xrange(0, len(all), vecSize):
-        ret.append(all[i:i+vecSize])
-    """
     return ret
 
 vecSize =  100
@@ -74,13 +60,13 @@ for s in subjects:
         dsForFiles[str(data)] = s
         ds.appendLinked(data ,  data)
 ds.nClasses = len(data)
-decay= 0.9999
+decay= 0.999
 myWeightdecay = 0.8
-initialLearningrate= 0.00025
-hidden_size = 500
-epochs=40
+initialLearningrate= 0.0005
+hidden_size = 150
+epochs=150
 splitProportion = 0.5
-description ='AutoEncoder convergence, hidden layer size: '+str(hidden_size) 
+description ='Unsupervised AutoEncoder convergence, hidden layer size: '+str(hidden_size) 
 
 print 'dataset size', len(ds)
 print 'input layer size', len(ds.getSample(0)[0])
@@ -119,7 +105,7 @@ n.sortModules()
 
 trainer = BackpropTrainer(n, trndata,  learningrate=initialLearningrate,\
                             lrdecay=decay, verbose=True, weightdecay=myWeightdecay)
-print 'h: ', hidden_size, ' epochs ', epochs, ' initialLearningrate ', \
+print ' h: ', hidden_size, ' epochs ', epochs, ' initialLearningrate ', \
     initialLearningrate, ' decay ', decay, ' splitProportion: ', \
     str(splitProportion), ' weightdecay ', str(myWeightdecay)
 def printError(ds, label):
@@ -172,7 +158,8 @@ createFile('train', trndata)
 createFile('test', tstdata)
 plt.plot(trnresults, label='Train error ')
 plt.plot(tstresults, label='Test error ')
-plt.title(description)
+plt.title('final test error: ' + str(tstresults[-1])+' final train error: ' \
+          + str(trndata[-1])+description)
 plt.xlabel('epoches')
 plt.ylabel('error')
 plt.legend().draggable()

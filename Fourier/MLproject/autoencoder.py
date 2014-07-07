@@ -75,9 +75,9 @@ ds.nClasses = len(subjects)
 
 decay= 0.9999
 myWeightdecay = 0.8
-initialLearningrate= 0.001
-hidden_size = 1000
-epochs=300
+initialLearningrate= 0.002
+hidden_size = 100
+epochs=400
 splitProportion = 0.5
 
 print 'dataset size', len(ds)
@@ -117,16 +117,19 @@ n.sortModules()
 
 trainer = BackpropTrainer(n, trndata,  learningrate=initialLearningrate,\
                             lrdecay=decay, verbose=True, weightdecay=myWeightdecay)
-print 'h: ', hidden_size, ' epochs ', epochs, ' initialLearningrate ', \
+description =  'supervised, h: ', hidden_size, ' epochs ', epochs, ' initialLearningrate ', \
     initialLearningrate, ' decay ', decay, ' splitProportion: ', \
     str(splitProportion), ' weightdecay ', str(myWeightdecay)
+trnresults=[]
+tstresults=[]
 for _ in range(epochs):
     trainer.trainEpochs(1)
     trnresult = percentError( trainer.testOnClassData(),
                                   trndata['class'] )
+    trnresults.append(trnresult)
     tstresult = percentError( trainer.testOnClassData(
            dataset=tstdata ), tstdata['class'] )
-    
+    tstresults.append(tstresult)
     print "epoch: %4d" % trainer.totalepochs, \
       "  train error: %5.2f%%" % trnresult, \
       "  test error: %5.2f%%" % tstresult
@@ -157,14 +160,19 @@ def createFile(label, ds):
     
     for input, tag in ds:
         newInput= an.activate(input)
-        print len(newInput)
         for v in newInput:
             out.write(str(v)+',')
         out.write(str(subjects[tag[0]])+'\n')
 
 createFile('train', trndata)
 createFile('test', tstdata)
-
+plt.plot(trnresults, label='Train error ')
+plt.plot(tstresults, label='Test error ')
+plt.title(description)
+plt.xlabel('epoches')
+plt.ylabel('error')
+plt.legend().draggable()
+plt.show()
 
 
 
