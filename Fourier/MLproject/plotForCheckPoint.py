@@ -17,12 +17,13 @@ plt.ylim((0, 1.5))
 plt.show()
 """
 
-algos = ['SVM', 'Multilayer perceptron', 'Naive Bayse', 'RBF Network', 'Functional trees', 'Best-first tree' ]
-performence = [23.0/35, 20.0/35, 14.0/35, 27.0/35, 24.0/35, 15.0/35]
+algos = ['Our', 'RBF Network', 'Functional trees', 'SVM', 'Multilayer perceptron',  'Best-first tree', 'Naive Bayse' ]
+performence = [0.8, 27.0/35, 24.0/35, 23.0/35, 20.0/35, 15.0/35, 14.0/35]
 r = range(1, len(performence)+1)
-plt.title('Accuracy of different algorithms with train set of 50%')
+plt.title('Testset classification accuracy compare to base line (split=0.5)')
 #plt.xlabel('Algorithm')
 plt.ylabel('Success rate in test set')
-plt.bar(r, performence, align='center')
+barlist = plt.bar(r, performence, align='center')
+barlist[0].set_color('g')
 plt.xticks(r, algos)
 plt.show()

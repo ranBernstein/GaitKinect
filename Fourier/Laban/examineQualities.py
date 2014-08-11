@@ -30,7 +30,7 @@ def eval(ds):
     return f1s, ps, rs
 
 if __name__ == '__main__':
-    p = Pool(6)
+    p = Pool(7)
     qualities, combinations = cp.getCombinations()
     print len(qualities)
     

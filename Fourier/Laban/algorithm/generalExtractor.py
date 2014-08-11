@@ -13,10 +13,26 @@ def getStats(vec):
     stats.append(np.mean(np.abs(vec)))
     stats.append(np.mean(np.square(vec)))
     stats.append(np.std(vec))
+    stats.append(st.skew(vec))
     stats.append(st.kurtosis(vec))
     stats.append(np.max(vec))
     stats.append(np.min(vec))
+    stats.append(np.max(np.abs(vec)))
     return stats
+
+def analyzeData(time, data):
+    vec = []
+    vec+=getStats(data)
+    _, un = inter.getUniformSampled(time, data)
+    cleaned = ma.movingAverage(un, 20, 1.1)
+    vec+=getStats(un)
+    velocity = np.diff(cleaned)
+    vec+=getStats(velocity)
+    acceleration = np.diff(velocity)
+    vec+=getStats(acceleration)
+    jurk = np.diff(acceleration)
+    vec+=getStats(jurk)
+    return vec
 
 def getFeatureVec(fileName, joints=None):
     headers = open(fileName, 'r').readline().split()
@@ -32,20 +48,15 @@ def getFeatureVec(fileName, joints=None):
             continue
         try:
             time, _, angles, _ = ae.getAngleVec(fileName, h, False, ver)
+            time, relJoints = ae.getRelative2AncestorPosition(file, h)
             if len(angles)==0:
                 continue
         except Exception, e:#joint without a father
             continue
-        vec+=getStats(angles)
-        _, un = inter.getUniformSampled(time, angles)
-        cleaned = ma.movingAverage(un, 20, 1.1)
-        vec+=getStats(un)
-        velocity = np.diff(cleaned)
-        vec+=getStats(velocity)
-        acceleration = np.diff(velocity)
-        vec+=getStats(acceleration)
-        jurk = np.diff(acceleration)
-        vec+=getStats(jurk)
+        vec=[]
+        vec+=analyzeData(angles)
+        vec+=analyzeData(relJoints)
+        
     extractor = aa.getExtractor(fileName)
     advancements = ar.AdvanceAndRetreate(extractor).extract(fileName)
     vec+=getStats(advancements)

@@ -5,6 +5,22 @@ import jointsMap as jm
 from utils.utils import binaryByMedian, deriveTimeSeries, smoothOutliers
 
 
+def getRelative2AncestorPosition(file, joint):
+    f = open(file, 'r')
+    headers = f.readline()
+    headers = jm.getFileHeader(headers)
+    time = []
+    relJoints = []
+    for line in f:
+        splited = line.split()
+        absPos = float(splited[headers.index(joint)])
+        ancestorPos = float(splited[headers.index(jm.ancestorMap[joint])])
+        relPos = absPos - ancestorPos;
+        relJoints.append(relPos);
+        time.append(float(splited[headers.index('timestamp')]))
+
+    return time, relJoints
+
 def getAnccestorRelativePos(splited, isRelative, chosenIndices):
     input = []
     for i in range(len(splited)):

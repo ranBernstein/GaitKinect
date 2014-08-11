@@ -1,5 +1,5 @@
 from utils.vicon.amcParser import getAMCperiod
-from utils.periodAnalysisUtils import alignByMax
+from utils.utils import alignByMax
 import matplotlib.pyplot as plt
 import math
 import numpy as np

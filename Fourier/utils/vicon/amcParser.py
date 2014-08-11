@@ -4,7 +4,7 @@ from utils.kinect.Cleaner import *
 from matplotlib.mlab import PCA
 from array import array
 import matplotlib.cm as cm
-import angleExtraction as ae
+import utils.kinect.angleExtraction as ae
 
 
 def getAMCInput(joint, subject, index):

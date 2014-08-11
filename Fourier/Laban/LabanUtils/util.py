@@ -38,7 +38,7 @@ def getPybrainDataSet():
 def constructNet(inLayerSize, hiddenSize, outLayerSize):
     inLayer = LinearLayer(inLayerSize)
     hiddenLayer = SigmoidLayer(hiddenSize)
-    outLayer = LinearLayer(outLayerSize)
+    outLayer = SigmoidLayer(outLayerSize)
     n = FeedForwardNetwork()
     n.addInputModule(inLayer)
     n.addModule(hiddenLayer)
@@ -69,7 +69,7 @@ def fromDStoXY(ds):
         X.append(input)
         for i in range(outLayerSize):
             Y[i].append(tag[i])
-    return X,Y
+    return np.array(X),np.array(Y)
 
 
 def clfSVM(tstdata, trndata):
