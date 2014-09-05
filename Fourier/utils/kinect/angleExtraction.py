@@ -5,7 +5,11 @@ import jointsMap as jm
 from utils.utils import binaryByMedian, deriveTimeSeries, smoothOutliers
 
 
-def getRelative2AncestorPosition(file, joint):
+def getRelative2AncestorPosition(file, joint, ver):
+    f = open(file, 'r')
+    headers = f.readline()
+    firstLine = f.readline().split()
+    
     f = open(file, 'r')
     headers = f.readline()
     headers = jm.getFileHeader(headers)
@@ -14,7 +18,10 @@ def getRelative2AncestorPosition(file, joint):
     for line in f:
         splited = line.split()
         absPos = float(splited[headers.index(joint)])
-        ancestorPos = float(splited[headers.index(jm.ancestorMap[joint])])
+        if 'SpineBase' in joint:
+            ancestorPos = float(firstLine[headers.index(joint)])
+        else:
+            ancestorPos = float(splited[headers.index(jm.ancestorMap[ver][joint])])
         relPos = absPos - ancestorPos;
         relJoints.append(relPos);
         time.append(float(splited[headers.index('timestamp')]))
@@ -91,6 +98,8 @@ def calcAngle(x1, y1, z1, x2, y2, z2, x3, y3, z3):
 def dis(x1, x2, y1, y2, z1, z2):
     return sqrt((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2)
 
+def getUnitVec(v):
+    return (np.array(v)/length(v)).tolist()
 
 def getAngleFromSplited(headers, splited, jointStr, checkConfedence=True, version='OLD'):
     jointCol = headers.index(jointStr)
@@ -152,7 +161,7 @@ def getAngleVec(filePath, jointStr, checkConfedence=True, version='OLD'):
     weights = []
     for line in f:
         splited = line.split() 
-        timeStamp = int(splited[headers.index('timestamp')])
+        timeStamp = float(splited[headers.index('timestamp')])
         frameNum = int(splited[headers.index('framenum')])
         splited = np.array(splited)
         retVal = getAngleFromSplited(headers, splited, jointStr, \

@@ -3,20 +3,23 @@ import utils.MovingAverage as ma
 import numpy as np
 import utils.spikeDetection as spike
 import utils.utils as pu
+import utils.kinect.jointsMap as jm
 
 class LabanExtractor:
         
     def extractLaban(self, fileName, huristic):
         f = open(fileName, 'r')
         headers = f.readline().split()
+        headers = jm.getFileHeader(headers)
         jointsIndices = self.getJointsIndices(headers)
         vec = []
         for line in f:
             lineInFloats=[float(v) for v in line.split()]
-            try:
-                vec.append(huristic(lineInFloats, headers, jointsIndices))
-            except Exception, e:
-                print e
+            #try:
+            vec.append(huristic(lineInFloats, headers, jointsIndices))
+            #except Exception, e:
+                #vec.append(huristic(lineInFloats, headers, jointsIndices))
+                #print e
         return vec
     
     def printConfedence(self, filtered, ranges, positive, negetive):
@@ -96,7 +99,7 @@ class LabanExtractorKinectV1(LabanExtractor) :
     
 class LabanExtractorKinectV2(LabanExtractor) :
     def getLongAxeIndices(self, headers):
-        return headers.index('SpineBase_X'), headers.index('ShoulderCenter_X')
+        return headers.index('SpineBase_X'), headers.index('SpineShoulder_X')
     def getCenterJointIndex(self, headers):
         return headers.index('SpineBase_X')   
 #plotExpendingCondencing()

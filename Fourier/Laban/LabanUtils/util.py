@@ -8,7 +8,7 @@ from pybrain.structure import FullConnection
 from pybrain.structure.modules import BiasUnit
 from sklearn import svm
 
-def getPybrainDataSet():
+def getPybrainDataSet(source='Rachelle'):
     qualities, combinations = cp.getCombinations()
     moods = combinations.keys()
     ds = None
@@ -18,7 +18,7 @@ def getPybrainDataSet():
             continue
         for typeNum in range(1,21):
             for take in range(1,10):
-                fileName = '../inputs/Rachelle/v2/recordingsByMood/'+mood+'/'+\
+                fileName = 'recordings/'+source+'/'+mood+'/'+\
                 str(typeNum)+'_'+str(take)+'.skl'
                 try:
                     data = ge.getFeatureVec(fileName)
@@ -31,8 +31,6 @@ def getPybrainDataSet():
                     output[qualities.index(q)] = 1
                 ds.appendLinked(data ,  output)
                 l+=sum(output)
-    print len(ds)
-    print l
     return ds
 
 def constructNet(inLayerSize, hiddenSize, outLayerSize):
