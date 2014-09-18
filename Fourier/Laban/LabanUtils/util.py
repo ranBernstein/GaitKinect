@@ -7,8 +7,8 @@ from pybrain.structure import LinearLayer, SigmoidLayer
 from pybrain.structure import FullConnection
 from pybrain.structure.modules import BiasUnit
 from sklearn import svm
-
 def getPybrainDataSet(source='Rachelle'):
+    first = False#True
     qualities, combinations = cp.getCombinations()
     moods = combinations.keys()
     ds = None
@@ -21,7 +21,8 @@ def getPybrainDataSet(source='Rachelle'):
                 fileName = 'recordings/'+source+'/'+mood+'/'+\
                 str(typeNum)+'_'+str(take)+'.skl'
                 try:
-                    data = ge.getFeatureVec(fileName)
+                    data, featuresNames = ge.getFeatureVec(fileName, first)
+                    first = False
                 except IOError:
                     continue
                 if ds is None:#initialization
@@ -30,8 +31,9 @@ def getPybrainDataSet(source='Rachelle'):
                 for q in combinations[mood][typeNum]:
                     output[qualities.index(q)] = 1
                 ds.appendLinked(data ,  output)
+
                 l+=sum(output)
-    return ds
+    return ds, featuresNames
 
 def constructNet(inLayerSize, hiddenSize, outLayerSize):
     inLayer = LinearLayer(inLayerSize)

@@ -9,9 +9,23 @@ from sklearn.ensemble import GradientBoostingClassifier
 from multiprocessing import Pool
 import math
 from sklearn.feature_selection import SelectPercentile, f_classif, \
-    f_oneway, f_regression, chi2, RFE, RFECV 
+    f_oneway, f_regression, chi2, SelectKBest
+from sklearn.pipeline import Pipeline
+
+import matplotlib
+from matplotlib.font_manager import FontProperties
+
+#fontP = FontProperties()
+#fontP.set_size('small')
+font = {'family' : 'normal',
+        'style' : 'italic',
+        'size'   : 18}
+#legend([plot1], "title", prop = font)
+matplotlib.rc('font', **font)
 
 chooser=f_classif
+selectedFeaturesNum=50
+
 def eval(ds, clf, splitProportion=0.2, p=4):
     #splitProportion = 0.2
     tstdata, trndata = ds.splitWithProportion( splitProportion )
@@ -21,16 +35,13 @@ def eval(ds, clf, splitProportion=0.2, p=4):
     ps =[]
     rs=[]
     for i, (y, y_test) in enumerate(zip(Y, Y_test)):
-        if all(v == 0 for v in y):
-            continue
-        
-        es = SVR(kernel='linear')
-        clf = RFECV(estimator=es, step=0.05)
-        clf.fit(X, y)
-        pred = clf.predict(X_test)
-        
-        #selector = SelectPercentile(chooser, percentile=p)
-        #selector.fit(X, y)
+        anova_filter = SelectKBest(f_classif, k=selectedFeaturesNum)
+        pipe = Pipeline([
+                        ('feature_selection', anova_filter),
+                        ('classification', clf)
+                        ])
+        pipe.fit(X, y)
+        pred = pipe.predict(X_test)
         name = str(clf).split()[0].split('(')[0]
         #clf.fit(selector.transform(X), y)
         #pred = clf.predict(selector.transform(X_test))
@@ -41,16 +52,16 @@ def eval(ds, clf, splitProportion=0.2, p=4):
     return f1s, ps, rs
 
 if __name__ == '__main__':
-    p = Pool(3)
+    p = Pool(8)
     qualities, combinations = cp.getCombinations()
     source = 'Rachelle' 
-    ds = labanUtil.getPybrainDataSet(source)
+    ds, featuresNames = labanUtil.getPybrainDataSet(source)
     inLayerSize = len(ds.getSample(0)[0])
     outLayerSize = len(ds.getSample(0)[1])
     f1s = []
     ps=[] 
     rs=[]
-    testNum=1
+    testNum=24
     for _ in qualities:
         f1s.append([])
         ps.append([])
@@ -78,30 +89,43 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
     ind = np.arange(len(qualities))
     width = 0.25   
-    f1Rects = ax.bar(ind, f1s, width, color='g', label='f1: '+str(np.mean(f1s)) )
-    pRecrs = ax.bar(ind+width, ps, width, color='b', label='precision: '+str(np.mean(ps)))
-    rRects = ax.bar(ind+2*width, rs, width, color='r', label='recall: '+str(np.mean(rs)))
+    f1Rects = ax.bar(ind, f1s, width, color='g', label='F1: '+str(round(np.mean(f1s),3)) )
+    pRecrs = ax.bar(ind+width, ps, width, color='b', label='Precision: '+str(round(np.mean(ps),3)))
+    rRects = ax.bar(ind-width, rs, width, color='r', label='Recall: '+str(round(np.mean(rs),3)))
     ax.set_xticks(ind+width)
-    ax.set_xticklabels(ind)
+    xtickNames = plt.setp(ax, xticklabels=qualities)
+    plt.setp(xtickNames, rotation=60)#, fontsize=8)
+    ax.set_xticklabels(qualities)
+    """
     def autolabel(rects):
         # attach some text labels
         for i,rect in enumerate(rects):
             height = rect.get_height()
-            ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, qualities[i],#'%d'%int(height),
-                    ha='center', va='bottom')
+            #ax.text(rect.get_x()+rect.get_width()/2., 1.05*height, qualities[i],#'%d'%int(height),
+             #       ha='center', va='bottom')
     autolabel(f1Rects)
+    """
     ax.legend().draggable()
     dsSize = ds.getLength()
     vecLen = len(ds.getSample(0)[0])
     name = str(clf).split()[0].split('(')[0]
     #plt.title('F1 mean: '+str(m)+', Test amount: '+str(testNum))
-    plt.title('CLF: '+name+'Featue selection: '+chooser.__name__ + \
-              ', percentile: '+str(percentile) +', CMA: ' \
-              +source+ ', DS size: '+str(dsSize) \
-              + ', Vector size: '+str(vecLen)+ ', Split prop: ' \
-              +str(splitProportion)+', Repeated: '+str(testNum))
-    plt.xlabel('Quality index')
-    plt.ylabel('F1 score')
+    plt.title('CLF: '+name+
+              ', Featue selection: '+chooser.__name__  
+              #+ ', percentile: '+str(percentile) 
+              #+ ', CMA: ' + source
+              + ',\n Dataset size: '+str(dsSize) 
+              + ', Original number of features: ' + str(vecLen)
+              + ', \nNumber of features after selection: '+str(selectedFeaturesNum)
+              + ', Split prop: ' +str(splitProportion)
+              + ', Repetition number: '+str(testNum))
+    plt.xlabel('Quality')
+    #plt.xticks(*enumerate(qualities))
+    plt.ylabel('Performance')
+    plt.ylim((0,1.2))
+    #xtickNames = plt.setp(ax1, xticklabels=qualities)
+    #plt.setp(xtickNames, rotation=45, fontsize=8)
+    
     plt.show()
 
 

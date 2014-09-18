@@ -31,10 +31,10 @@ for line in file:
     mat[float(splited[0])] = splited[1:]
 #mat = mat[timeLine]
 #mat = {k: mat[k] for k in timeLine}
-out = open('out.skl', 'w')
-out.flush()
-out.write(headersStr)
-#out.write(headers)
+bestFeatures = open('bestFeatures.skl', 'w')
+bestFeatures.flush()
+bestFeatures.write(headersStr)
+#bestFeatures.write(headers)
 lastT = timeLine[0]
 lastNewT = lastT
 lastValues = {}
@@ -51,7 +51,7 @@ for t in timeLine:
     lastT = t
     line = mat[t]
     newT = lastNewT + delta if delta < ex.MAXIMAL_TIME_GAP else lastNewT + 33
-    out.write(str(newT) + '\t')
+    bestFeatures.write(str(newT) + '\t')
     lastNewT = newT
     #newStr = str(newT) + '\t'
     splited = [newT]
@@ -73,10 +73,10 @@ for t in timeLine:
         else: 
             if 'tracked' in header:
                 newV = 2
-        out.write(str(newV) + '\t')
-    out.write('\n')
+        bestFeatures.write(str(newV) + '\t')
+    bestFeatures.write('\n')
     frameNum += 1
-out.close()         
+bestFeatures.close()         
 print 'end' 
 plt.show()
 

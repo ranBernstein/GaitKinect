@@ -1,0 +1,19 @@
+Quality, Feature Name, Operator, F-value, p-value
+Advance, Position of Neck_Z , mean abs, 51.01, 3.4e-11
+ArmsToUpperBody, WristRight angle  , mean square, 58.73, 1.9e-12
+Bind, Position of SpineBase_Zafter LPF  , max, 63.83, 3.0e-13
+CondenseEnclose, ElbowRight angle after LPF  , max abs, 95.78, 7.2e-18
+Direct, Position of Head_Zafter LPF  , max abs, 27.49, 5.1e-07
+FreeLight, Average of Joint Distance From Center , max, 56.12, 5.0e-12
+Head-drop, Position of Head_Zafter LPF  , min, 46.32, 2.1e-10
+Jump, Position of SpineBase_Y , max, 195.05, 4.2e-29
+Passive, Position of Head_Z , mean, 34.61, 2.4e-08
+Retreat, Position of SpineBase_Zafter LPF  , max, 65.05, 1.9e-13
+Rhythmicity, ElbowLeft angle after LPF  , min abs, 36.42, 1.1e-08
+Rotation, Position of ElbowRight_Z acceleration , max abs, 97.75, 3.9e-18
+Sink, Position of SpineBase_Y , mean, 72.18, 1.6e-14
+Spread, Position of HandTipLeft_Xafter LPF  , min, 124.42, 1.6e-21
+Strong, Position of Neck_Z , mean abs, 40.11, 2.5e-09
+Sudden, Position of SpineShoulder_Zafter LPF  , min abs, 64.73, 2.2e-13
+TwistBack, Position of SpineBase_Zafter LPF  , max, 334.66, 2.3e-40
+UpRise, Position of SpineShoulder_Y jurk , mean abs, 72.81, 1.3e-14

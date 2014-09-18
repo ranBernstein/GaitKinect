@@ -1,72 +1,95 @@
 import numpy as np
 import LabanUtils.util as labanUtil
 import LabanUtils.combinationsParser as cp
+import Laban.algorithm.generalExtractor as ge
 import matplotlib.pyplot as plt
 from sklearn import metrics, svm
-from sklearn.svm import SVR
-from sklearn.ensemble import AdaBoostClassifier
+from sklearn.svm import LinearSVC
+from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from multiprocessing import Pool
 import math
-from sklearn.feature_selection import SelectPercentile, f_classif, \
-    f_oneway, f_regression, chi2, RFE, RFECV 
+from sklearn.feature_selection import f_classif, SelectKBest, f_regression
+from sklearn.pipeline import Pipeline
 
-chooser=f_regression
-def eval(ds, clf, splitProportion=0.2, p=4):
+chooser=f_classif
     #splitProportion = 0.2
-    import numpy as np
-import LabanUtils.util as labanUtil
-import LabanUtils.combinationsParser as cp
-import matplotlib.pyplot as plt
-from sklearn import metrics, svm
-from sklearn.svm import SVR
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.ensemble import GradientBoostingClassifier
-from multiprocessing import Pool
-import math
-from sklearn.feature_selection import SelectPercentile, f_classif, \
-    f_oneway, f_regression, chi2, RFE, RFECV 
-
-    #splitProportion = 0.2
-
-tstdata = labanUtil.getPybrainDataSet('Karen')  
-trndata = labanUtil.getPybrainDataSet('Rachelle')  
-print 'trndata '+str(len(trndata.getSample(0)[0]))
-print 'tstdata '+str(len(tstdata.getSample(0)[0]))
+import mlpy
+trainSource = 'Rachelle'
+testSource = 'Karen'
+withPCA=False
+fs=False
+tstdata, featuresNames = labanUtil.getPybrainDataSet(testSource)  
+trndata, _ = labanUtil.getPybrainDataSet(trainSource)  
 X, Y = labanUtil.fromDStoXY(trndata)
 X_test, Y_test = labanUtil.fromDStoXY(tstdata)
 f1s=[]
 ps =[]
 rs=[]
+c=100
+ratio =5
+#clf = svm.LinearSVC(C=c,  loss='l1', penalty='l2', class_weight={1: ratio}, dual=False)
 clf = AdaBoostClassifier()
 percentile=5
+
+bestFeatures = open('bestFeatures.csv', 'w')
+bestFeatures.flush()
+bestFeatures.write('Quality, Feature Name, Operator, F-value, p-value\n')
+
+performance = open('performance.csv', 'w')
+performance.flush()
+performance.write('Quality, Precision, Recall, F1 score\n')
+
+qualities, combinations = cp.getCombinations()
+selectedFeaturesNum = 50
 for i, (y, y_test) in enumerate(zip(Y, Y_test)):
     if all(v == 0 for v in y):
         continue
-    
     """
-    es = SVR(kernel='linear')
-    clf = RFECV(estimator=es, step=0.05)
-    clf.fit(X, y)
-    pred = clf.predict(X_test)
-    """
-    
-    selector = SelectPercentile(chooser, percentile=percentile)
+
+    selector = SelectKBest(chooser, 1)
     selector.fit(X, y)
-    name = str(clf).split()[0].split('(')[0]
-    clf.fit(selector.transform(X), y)
-    pred = clf.predict(selector.transform(X_test))
+    featureNum = selector.get_support().tolist().index(True)
+    pstr = str(selector.pvalues_[featureNum])
+    pstr = pstr[:3] + pstr[-4:]
+    scoreStr = str(round(selector.scores_[featureNum],2))
+    bestFeatures.write(qualities[i]+', '+ featuresNames[featureNum]+\
+                       ', '+scoreStr+', ' +pstr+ '\n')
+    #selector = SelectPercentile(chooser, percentile=percentile)
+    """
+    """
+    pca = mlpy.PCA()
+    pca.learn(np.array(X))
+    withPCA=True
+    X = pca.transform(X)
+    X_test = pca.transform(X_test)
+    """
+    
+    anova_filter = SelectKBest(f_classif, k=selectedFeaturesNum)
+    pipe = Pipeline([
+                    ('feature_selection', anova_filter),
+                    ('classification', clf)
+                    ])
+    pipe.fit(X, y)
+    pred = pipe.predict(X_test)
+    
+    precision = metrics.precision_score(y_test, pred)
+    recall = metrics.recall_score(y_test, pred)
     f1 = metrics.f1_score(y_test, pred)
+    performance.write(qualities[i]+', '+ str(round(precision,3))\
+                      +', '+ str(round(recall,3))\
+                      +', '+ str(round(f1, 3))+'\n')
+                      
     f1s.append(f1)
-    ps.append(metrics.precision_score(y_test, pred))
-    rs.append(metrics.recall_score(y_test, pred))
+    ps.append(precision)
+    rs.append(recall)
+    name = str(clf).split()[0].split('(')[0]
+bestFeatures.close()
+performance.close()
 
-
-qualities, combinations = cp.getCombinations()
 
 m = np.mean(f1s)
-print m
-print f1s
+print m, ge.chopFactor
 fig, ax = plt.subplots()
 ind = np.arange(len(qualities))
 width = 0.25   
@@ -88,10 +111,17 @@ testSize = tstdata.getLength()
 vecLen = len(trndata.getSample(0)[0])
 name = str(clf).split()[0].split('(')[0]
 #plt.title('F1 mean: '+str(m)+', Test amount: '+str(testNum))
-plt.title('CLF: '+name+'Featue selection: '+chooser.__name__ + \
-          ', percentile: '+str(percentile)\
-         + ', Train set size: '+str(trainSize) \
-         + ', Split prop: ' +str(testSize)+ ', Vector size: '+str(vecLen) )
+plt.title('CLF: '+name \
+         + ', Train set: CMA-'+ trainSource+' size-'+str(trainSize) \
+         + ', Test set: CMA-'+testSource+' size-'+str(testSize) \
+         + ', Features num: '+str(vecLen) \
+         + '\n Featue selection (FS) method: '+chooser.__name__ \
+         + ', Features num after FS: '+str(selectedFeaturesNum) \
+         +', chopFactor: '+str(ge.chopFactor)
+         +', with PCA: ' +str(withPCA)
+         +', with fs: ' +str(fs)
+         +', with C: ' +str(c)
+         +', cw: '+str(ratio))
 plt.xlabel('Quality index')
 plt.ylabel('F1 score')
 plt.show()

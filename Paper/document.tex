@@ -3,6 +3,7 @@
 \usepackage{url}
 \usepackage[margin=1.1in]{geometry}
 \usepackage{graphicx}
+\usepackage{csvsimple}
 \begin{document}
 \author{Ran Bernstein \\
 \texttt{ranb@cs.technion.ac.il} \\
@@ -20,7 +21,7 @@ leveraged if the Laban qualities will be recognized automatically.
 This paper presents an automated recognition method of Laban qualities from
 motion capture skeletal recordings and it is demonstrated on the output of
 Microsoft's Kinect V2 sensor.}
-\end{abstract} 
+\end{abstract}
 \section{Introduction}
 \subsection{Laban movement analysis}
 LMA is a formal language for motion description 
@@ -211,25 +212,45 @@ In this experiment both of the train and test datasets are taken from the same
 CMA.
 \begin{figure*}[ht!]
 \centering
-\includegraphics[width=\textwidth]{qualities.png}
+\includegraphics[width=\textwidth, height=60mm]{qualities.png}
 \caption{Recall, precision and F1 score of each Laban quality separately.}
 \label{qualities}
 \end{figure*}
+
 \subsection{Experiment 2}
 In this experiment the train set was taken from one CMAm while the test set
-was taken from another.
+was taken from another. The precision, recall and F1 scores where 0.57, 
+0.42 and 0.43 respectivaly. The best features are represented in table
+ \ref{bestFeatures}.
 \begin{figure*}[ht!]
 \centering
-\includegraphics[width=\textwidth]{Rachelle2Karen.png}
+\includegraphics[width=\textwidth, height=60mm]{Rachelle2Karen.png}
 \caption{Recall, precision and F1 score of each Laban quality where the train
-set is from one CMA and the test set is from another. F1 one score is 0.37}
+set is from one CMA and the test set is from another. F1 one score is 0.43}
 \end{figure*}
+\begin{document}
+\begin{table*}
+   \centering
+   \csvautotabular{bestFeatures.csv}
+   \caption{The feature with the highest F-value for every quality}
+   \label{bestFeatures}
+\end{table*}
+
+\begin{table*}
+   \centering
+   \csvautotabular{performance.csv}
+   \caption{Recall, precision and F1 score of each Laban quality where the train
+set is from one CMA and the test set is from another. Average F1 one score is
+0.43}
+   \label{bestFeatures}
+\end{table*}
+
 \subsection{Experiment 3}
 In this experiment the datasets of the two CMAs were mixed, and from the
 mixture both of the train and test sets were taken.
 \begin{figure*}[ht!]
 \centering
-\includegraphics[width=\textwidth]{mixture.png}
+\includegraphics[width=\textwidth, height=60mm]{mixture.png}
 \caption{Recall, precision and F1 score of each Laban quality where the train
 set is from one CMA and the test set is from another. F1 one score is 0.37}
 \label{qualities}

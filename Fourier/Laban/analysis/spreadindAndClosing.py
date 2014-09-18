@@ -1,4 +1,5 @@
-from  Laban import AbstractLabanAnalyzer, AbstractAnalysis
+from Laban.LabanUtils import AbstractLabanAnalyzer
+from Laban.LabanUtils import AbstractAnalysis
 import utils.kinect.angleExtraction as ae
 
 class SpreadindAndClosing(AbstractAnalysis.AbstractAnalysis):

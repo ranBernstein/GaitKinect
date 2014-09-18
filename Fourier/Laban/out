@@ -1,0 +1,19 @@
+Quality, Feature Name, Operator, F-value, p-value
+Advance, Position of Neck_Z jurk , mean abs, 51.01, 3.4
+ArmsToUpperBody, WristRight angle  jurk , mean square, 58.73, 1.9
+Bind, Position of SpineBase_Z acceleration , max, 59.13, 1.6
+CondenseEnclose, Position of SpineBase_Zafter LPF  , max, 69.74, 3.7
+Direct, Position of HandTipLeft_X , max abs, 26.47, 8.0
+FreeLight, Average of Joint Distance From Center , max, 56.12, 5.0
+Head-drop, Position of Head_Z , mean, 46.16, 2.2
+Jump, Position of SpineBase_Y velocity , max, 195.05, 4.2
+Passive, Position of Head_Z velocity , mean, 34.61, 2.4
+Retreat, Position of SpineBase_Z jurk , max, 61.37, 7.3
+Rhythmicity, ElbowLeft angle  velocity , min, 29.96, 1.7
+Rotation, Position of ElbowRight_Z acceleration , max, 66.47, 1.1
+Sink, Position of SpineBase_Y velocity , mean, 72.18, 1.6
+Spread, Position of ElbowLeft_Xafter LPF  , mean square, 113.69, 3.3
+Strong, Position of Neck_Z jurk , mean abs, 40.11, 2.5
+Sudden, Position of SpineShoulder_Z , min abs, 53.47, 1.3
+TwistBack, Position of SpineBase_Z acceleration , max, 313.26, 7.4
+UpRise, Position of ElbowLeft_Y , max, 58.96, 1.7

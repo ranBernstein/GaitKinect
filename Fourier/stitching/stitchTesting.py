@@ -29,12 +29,12 @@ for i,part in enumerate(parts):
         
 merged, mergedDes = loop.stitch(parts)
 print(len(merged))
-out = merged[-1]
+bestFeatures = merged[-1]
 des = mergedDes[-1]
-outOff, listOff = ut.alignByBig(out, list)
+outOff, listOff = ut.alignByBig(bestFeatures, list)
 plt.figure()
 plt.plot(xrange(listOff, listOff+len(list)), list, color='b')
-plt.plot(xrange(outOff, outOff+len(out)), out, color='r')
+plt.plot(xrange(outOff, outOff+len(bestFeatures)), bestFeatures, color='r')
 sortingIndices = sorted(range(len(des)), key=lambda k: des[k][1])
 frameSize = math.ceil(np.sqrt(len(sortingIndices)))
 

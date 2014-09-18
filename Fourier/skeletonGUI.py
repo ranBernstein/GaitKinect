@@ -127,7 +127,7 @@ class Ui_MainWindow(object):
         QtCore.QObject.connect(stop, SIGNAL("clicked()"),self.mainWindow,SLOT("stop()"))
         toolbarLayout.addWidget(stop)
         self.speedSlider = QtGui.QSlider()
-        self.speedSlider.setRange(1,200)
+        self.speedSlider.setRange(1,60)
         edit = QtGui.QLineEdit()
         edit.setFixedWidth(30)
         def speedChanged():
@@ -138,6 +138,15 @@ class Ui_MainWindow(object):
         self.speedSlider.setValue(self.mainWindow.playingSpeed)
         edit.setText(str(self.speedSlider.value()))
         self.speedSlider.valueChanged.connect(speedChanged)
+        
+        def speedChangedFromEdit():
+            speed = int(edit.text())
+            self.mainWindow.playingSpeed = speed
+            self.speedSlider.setValue(speed)
+            self.mainWindow.stop = True
+            self.mainWindow.play()
+        
+        edit.textChanged.connect(speedChangedFromEdit)
         #self.gridLayout.addLayout(toolbarLayout, 0,0)
         label = QLabel('Play speed\n in Fps:')
         playSpeedLayout =  QtGui.QVBoxLayout()
@@ -360,7 +369,6 @@ class SkeletonPlot(FigureCanvas):
                     
             if self.rotate:
                 self.ax.view_init(30, currTime)
-            fig.canvas.draw()
             return self.lines + self.pts + self.stick_lines
         print self.mainWindow.playingSpeed
         return animation.FuncAnimation(

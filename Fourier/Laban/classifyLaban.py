@@ -8,7 +8,7 @@ import LabanUtils.combinationsParser as cp
 from sklearn import metrics
 
 qualities, combinations = cp.getCombinations()
-ds = labanUtil.getPybrainDataSet()
+ds, featuresNames = labanUtil.getPybrainDataSet()
 inLayerSize = len(ds.getSample(0)[0])
 outLayerSize = len(ds.getSample(0)[1])
 splitProportion = 0.2

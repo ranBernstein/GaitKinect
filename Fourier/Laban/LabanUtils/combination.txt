@@ -23,38 +23,38 @@ Sudden,  Advance  a9
 Sudden,  Direct  a10
 Advance,  Direct  a11 
 
-Retreat,  CondenseEnclose,  Bind,  TwistBack  f1
-Retreat,  CondenseEnclose,  Bind  f2
+Retreat,  Condense/Enclose,  Bind,  TwistBack  f1
+Retreat,  Condense/Enclose,  Bind  f2
 Retreat,  Bind,  TwistBack  f3
-Retreat,  CondenseEnclose,   TwistBack   f4
-CondenseEnclose,  Bind,  TwistBack   f5
-Retreat,  CondenseEnclose  f6
+Retreat,  Condense/Enclose,   TwistBack   f4
+Condense/Enclose,  Bind,  TwistBack   f5
+Retreat,  Condense/Enclose  f6
 Retreat,  Bind  f7
 Retreat,  TwistBack  f8
-CondenseEnclose,  Bind  f9
-CondenseEnclose,   TwistBack   f10
+Condense/Enclose,  Bind  f9
+Condense/Enclose,   TwistBack   f10
 Bind,  TwistBack  f11
 
 Jump,  Rhythmicity,  Spread  h1
-Jump,  Rhythmicity,  FreeLight  h2
+Jump,  Rhythmicity,  Free  h2
 Jump,  Rhythmicity,  UpRise  h3
 Jump,  Rhythmicity,  Rotation  h4
-Jump,  Spread,   FreeLight  h5
+Jump,  Spread,   Free  h5
 Jump,  Spread,   UpRise   h6
 Jump,  Spread,  Rotation  h7
-Jump,  FreeLight,  UpRise  h8
-Jump,  FreeLight,  Rotation  h9
+Jump,  Free,  UpRise  h8
+Jump,  Free,  Rotation  h9
 Jump,  UpRise,  Rotation  h10
-Rhythmicity, Spread,  FreeLight  h11
-Rhythmicity,  FreeLight,  UpRise    h12
-Rhythmicity,  FreeLight,  Rotation  h13
+Rhythmicity, Spread,  Free  h11
+Rhythmicity,  Free,  UpRise    h12
+Rhythmicity,  Free,  Rotation  h13
 Rhythmicity, Spread,  UpRise    h14
 Rhythmicity, Spread,  Rotation  h15
 Rhythmicity, UpRise, Rotation  h16
-Spread,  FreeLight,  UpRise    h17
-Spread,  FreeLight,  Rotation  h18
+Spread,  Free,  UpRise    h17
+Spread,  Free,  Rotation  h18
 Spread,  UpRise, Rotation  h19
-FreeLight,  UpRise, Rotation  h20
+Free,  UpRise, Rotation  h20
 
 Side-Open,  Sustained,  Forward  n1
 Indirect,  Sustained,  Weight-shift  n2
