@@ -1,5 +1,5 @@
 from utils.kinect import jointsMap
-from algorithm import LabanExtractor as le
+from Laban.algorithm import LabanExtractor as le
 
 #class AbstractLabanAnalyzer:
 def getExtractor(inputFile):

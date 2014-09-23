@@ -1,4 +1,4 @@
-from algorithm import LabanExtractor as le
+from Laban.algorithm import LabanExtractor as le
 
 extractor = le.LabanExtractorKinectV1()
 

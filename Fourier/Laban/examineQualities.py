@@ -13,8 +13,8 @@ from sklearn.feature_selection import SelectPercentile, f_classif, \
 from sklearn.pipeline import Pipeline
 
 import matplotlib
-from matplotlib.font_manager import FontProperties
 
+#from matplotlib.font_manager import FontProperties
 #fontP = FontProperties()
 #fontP.set_size('small')
 font = {'family' : 'normal',

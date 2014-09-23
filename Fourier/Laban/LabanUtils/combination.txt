@@ -23,38 +23,38 @@ Sudden,  Advance  a9
 Sudden,  Direct  a10
 Advance,  Direct  a11 
 
-Retreat,  Condense/Enclose,  Bind,  TwistBack  f1
-Retreat,  Condense/Enclose,  Bind  f2
-Retreat,  Bind,  TwistBack  f3
-Retreat,  Condense/Enclose,   TwistBack   f4
-Condense/Enclose,  Bind,  TwistBack   f5
-Retreat,  Condense/Enclose  f6
+Retreat,  Condense+Enclose,  Bind,  Twist+Back  f1
+Retreat,  Condense+Enclose,  Bind  f2
+Retreat,  Bind,  Twist+Back  f3
+Retreat,  Condense+Enclose,   Twist+Back   f4
+Condense+Enclose,  Bind,  Twist+Back   f5
+Retreat,  Condense+Enclose  f6
 Retreat,  Bind  f7
-Retreat,  TwistBack  f8
-Condense/Enclose,  Bind  f9
-Condense/Enclose,   TwistBack   f10
-Bind,  TwistBack  f11
+Retreat,  Twist+Back  f8
+Condense+Enclose,  Bind  f9
+Condense+Enclose,   Twist+Back   f10
+Bind,  Twist+Back  f11
 
 Jump,  Rhythmicity,  Spread  h1
-Jump,  Rhythmicity,  Free  h2
-Jump,  Rhythmicity,  UpRise  h3
+Jump,  Rhythmicity,  Free+Light  h2
+Jump,  Rhythmicity,  Up+Rise  h3
 Jump,  Rhythmicity,  Rotation  h4
-Jump,  Spread,   Free  h5
-Jump,  Spread,   UpRise   h6
+Jump,  Spread,   Free+Light  h5
+Jump,  Spread,   Up+Rise   h6
 Jump,  Spread,  Rotation  h7
-Jump,  Free,  UpRise  h8
-Jump,  Free,  Rotation  h9
-Jump,  UpRise,  Rotation  h10
-Rhythmicity, Spread,  Free  h11
-Rhythmicity,  Free,  UpRise    h12
-Rhythmicity,  Free,  Rotation  h13
-Rhythmicity, Spread,  UpRise    h14
+Jump,  Free+Light,  Up+Rise  h8
+Jump,  Free+Light,  Rotation  h9
+Jump,  Up+Rise,  Rotation  h10
+Rhythmicity, Spread,  Free+Light  h11
+Rhythmicity,  Free+Light,  Up+Rise    h12
+Rhythmicity,  Free+Light,  Rotation  h13
+Rhythmicity, Spread,  Up+Rise    h14
 Rhythmicity, Spread,  Rotation  h15
-Rhythmicity, UpRise, Rotation  h16
-Spread,  Free,  UpRise    h17
-Spread,  Free,  Rotation  h18
-Spread,  UpRise, Rotation  h19
-Free,  UpRise, Rotation  h20
+Rhythmicity, Up+Rise, Rotation  h16
+Spread,  Free+Light,  Up+Rise    h17
+Spread,  Free+Light,  Rotation  h18
+Spread,  Up+Rise, Rotation  h19
+Free+Light,  Up+Rise, Rotation  h20
 
 Side-Open,  Sustained,  Forward  n1
 Indirect,  Sustained,  Weight-shift  n2
