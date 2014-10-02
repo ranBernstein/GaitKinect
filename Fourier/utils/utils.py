@@ -123,8 +123,10 @@ def dropOutliers(input, time=None):
 def normalizeVector(vec):
     amplitude = float(max(np.abs(max(vec)), np.abs(min(vec))))
     return [v/amplitude-np.mean(vec) for v in vec]
-    
 
+def corr(v1,v2):
+    return np.dot(v1,v2)/np.sqrt(np.dot(v1,v1)*np.dot(v2,v2))
+    
 
 
 

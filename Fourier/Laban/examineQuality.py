@@ -45,7 +45,6 @@ def cor(x01, x02):
 
 pca = mlpy.PCA()
 pca.learn(np.array(X))
-print pca._coeff.shape
 X = pca.transform(X)
 
 selector = SelectKBest(chooser, 2)

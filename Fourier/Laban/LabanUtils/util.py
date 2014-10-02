@@ -6,7 +6,6 @@ from pybrain.structure import FeedForwardNetwork
 from pybrain.structure import LinearLayer, SigmoidLayer
 from pybrain.structure import FullConnection
 from pybrain.structure.modules import BiasUnit
-from sklearn import svm
 def getPybrainDataSet(source='Rachelle'):
     first = False#True
     qualities, combinations = cp.getCombinations()
@@ -71,7 +70,7 @@ def fromDStoXY(ds):
             Y[i].append(tag[i])
     return np.array(X),np.array(Y)
 
-
+"""
 def clfSVM(tstdata, trndata):
     outLayerSize = len(tstdata.getSample(0)[1])
     clfs = []
@@ -89,3 +88,4 @@ def clfSVM(tstdata, trndata):
     for i in range(outLayerSize):
         localScores.append(clfs[i].score(X,Y[i]))
     return 1-np.mean(localScores)
+"""

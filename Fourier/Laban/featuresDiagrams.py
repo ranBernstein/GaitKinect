@@ -7,7 +7,8 @@ def createDiagram(source, quality):
     X, Y = labanUtil.fromDStoXY(ds)
     qualities, combinations = cp.getCombinations()
     y = Y[qualities.index(quality)]
-    ig.createDiagram(X, y, featuresNames, source)
+    fileName = source+quality
+    ig.createDiagram(X, y, featuresNames, fileName)
 
 quality = 'Strong'  
 createDiagram('Rachelle', quality)  
