@@ -1,7 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
-import scipy 
 
 def scaleVec(input, scaleFactor):
     x = np.linspace(0, len(input),  len(input))

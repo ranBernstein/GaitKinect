@@ -13,6 +13,7 @@ Module containing Axes3D, an object which can plot 3D objects on a
 import warnings
 from operator import itemgetter
 
+from matplotlib.cbook import _string_to_bool
 import matplotlib.axes as maxes
 from matplotlib.axes import Axes, rcParams
 from matplotlib import cbook
@@ -1253,7 +1254,8 @@ class Axes3D(Axes):
         # TODO: Operate on each axes separately
         if len(kwargs) :
             b = True
-        self._draw_grid = maxes._string_to_bool(b)
+        #self._draw_grid = maxes._string_to_bool(b)
+        self._draw_grid = _string_to_bool(b)
 
     def ticklabel_format(self, **kwargs) :
         """

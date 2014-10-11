@@ -2,8 +2,6 @@ import numpy as np
 import sys
 from math import sqrt, acos
 import jointsMap as jm
-from utils.utils import binaryByMedian, deriveTimeSeries, smoothOutliers
-
 
 def getRelative2AncestorPosition(file, joint, ver):
     f = open(file, 'r')

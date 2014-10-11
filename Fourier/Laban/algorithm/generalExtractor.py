@@ -12,7 +12,6 @@ import Laban.analysis.bindVsFree as bf
 import Laban.analysis.lightVsStrong as ls
 import Laban.analysis.jump as jump
 import Laban.LabanUtils.AbstractLabanAnalyzer as aa
-import Laban.LabanUtils.preprocess as pre
 
 chopFactor = 0.0
 def getStats(data, label):
